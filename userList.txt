@@ -1,4 +1,0 @@
-lnarisaw, 12341234
-qwertyui, 12345678
-username1, password1
-username2, password2
