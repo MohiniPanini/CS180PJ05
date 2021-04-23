@@ -98,6 +98,10 @@ public class MessageClient {
                     loggedIn = true;
                 }
             } //login complete
+            
+            // Display gui to give user messaging choices
+            MessageGUI messageGUI = new MessageGUI();
+            SwingUtilities.invokeLater(messageGUI);
 
             //
         }
