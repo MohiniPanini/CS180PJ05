@@ -44,6 +44,7 @@ public class User {
 		                String[] parts = {line.substring(0, firstSplit), line.substring(firstSplit + 1, secondSplit),
            			     line.substring(secondSplit + 1, line.length())};
 				users.add(new User(parts[0], parts[1], Integer.parseInt(parts[2])));
+				line = reader.readLine();
 			}
 			User.users = users;
 		} catch (Exception e) {
