@@ -16,7 +16,7 @@ public class MessageClient {
     private static String password;
     private static String action;
 
-    //login GUI fields
+    // login GUI fields
     static JFrame loginFrame;
     static JTextField usernameField;
     static JTextField passwordField;
@@ -26,30 +26,28 @@ public class MessageClient {
 
 
     public static void main(String[] args) {
-        //connect to server
+        // connect to server
         try (Socket socket = new Socket("localhost", 1234)) {
 
-            //writing to server
+            // writing to server
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            //reading from server
+            // reading from server
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            //Log in GUI
-            //login with username and password, or select "Create account" or "Edit or delete account"
+            // Log in GUI
+            // login with username and password, or select "Create account" or "Edit or delete account"
             boolean loggedIn = false;
             while(!loggedIn) {
                 LoginGUI loginGUI = new LoginGUI();
                 SwingUtilities.invokeLater(loginGUI);
                 while (action == null) {
                     Thread.onSpinWait();
-                } //end while
-                System.out.println(action);
+                } // end while
                 out.write(action);
                 out.println();
-                System.out.println(username);
                 out.flush();
-                //login option
+                // login option
                 if (action.equals("login")) {
-                    String usernamePassword = String.format("%s, %s", username, password);
+                    String usernamePassword = String.format("%s|%s", username, password);
                     out.write(usernamePassword);
                     out.println();
                     out.flush();
@@ -61,43 +59,125 @@ public class MessageClient {
                         JOptionPane.showMessageDialog(null, "Login successful",
                                 "Message Login", JOptionPane.INFORMATION_MESSAGE);
                         loggedIn = true;
-                    } //end if
-                }
-                //create account option
+                    } // end if
+                } // end login option
+
+                // create account option
                 else if (action.equals("create")) {
                     boolean created = false;
                     while(!created) {
                         username = null;
                         password = null;
-                        while (username == null || username.equals("")) {
+                        while (created == false && (username == null || username.equals(""))) {
                             username = JOptionPane.showInputDialog(null, "Enter username",
                                     "Create account", JOptionPane.QUESTION_MESSAGE);
-                        } //end while
-                        out.write(username);
-                        out.println();
-                        out.flush();
-                        String alreadyExist = in.readLine();
-                        System.out.println(alreadyExist);
-                        if (alreadyExist.equals("created")) {
-                            while (password == null || password.equals("")) {
-                                password = JOptionPane.showInputDialog(null, "Enter password",
-                                        "Create account", JOptionPane.QUESTION_MESSAGE);
-                            } //end while
-                            String usernamePassword = String.format("%s, %s", username, password);
+                            if (username == null) {
+                                created = true;
+                            } // end if
+                        } // end while
+                        if (!created) {
+                            out.write(username);
+                            out.println();
+                            out.flush();
+                            String alreadyExist = in.readLine();
+                            String invalid = null;
+                            if (alreadyExist.equals("validUsername")) {
+                                while (!created && (password == null || password.equals("") ||
+                                        invalid.equals("invalid"))) {
+                                    password = JOptionPane.showInputDialog(null,
+                                            "Enter password", "Create account",
+                                            JOptionPane.QUESTION_MESSAGE);
+                                    if (password == null) {
+                                        created = true;
+                                    } else {
+                                        out.write(password);
+                                        out.println();
+                                        out.flush();
+                                    }
+                                    invalid = in.readLine();
+                                    if (invalid.equals("invalid")) {
+                                        JOptionPane.showMessageDialog(null,
+                                                "Password has to be at least 8 characters including " +
+                                                        "Lowercase, Uppercase, and number", "Create account",
+                                                JOptionPane.ERROR_MESSAGE);
+                                    } // end if
+                                } // end while
+                                created = true;
+                                loggedIn = true;
+                                JOptionPane.showMessageDialog(null,
+                                        "Account created successfully", "Create account",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, alreadyExist,
+                                        "Create account", JOptionPane.ERROR_MESSAGE);
+                            } // end if
+                        } // end if
+                    } // end while
+                } // create account complete
+
+                // edit or delete account option
+                else if (action.equals("edit")) {
+                    username = null;
+                    password = null;
+                    boolean noInput = false;
+                    while (!loggedIn) {
+                        EditLoginGUI editLoginGUI = new EditLoginGUI();
+                        SwingUtilities.invokeLater(editLoginGUI);
+                        while (editLoginGUI.getPassword() == null) {
+                            Thread.onSpinWait();
+                        } // end while
+                        username = editLoginGUI.getUsername();
+                        password = editLoginGUI.getPassword();
+                        if (username != null && password != null) {
+                            String usernamePassword = String.format("%s|%s", username, password);
                             out.write(usernamePassword);
                             out.println();
                             out.flush();
-                            created = true;
-                            JOptionPane.showMessageDialog(null, "Account created successfully",
-                                    "Create account", JOptionPane.INFORMATION_MESSAGE);
-                        } else {
-                            JOptionPane.showMessageDialog(null, alreadyExist,
-                                    "Create account", JOptionPane.ERROR_MESSAGE);
+                            String loggedin = in.readLine();
+                            if (!loggedin.equals("loggedIn")) {
+                                JOptionPane.showMessageDialog(null, loggedin,
+                                        "Message Login", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Login successful",
+                                        "Message Login", JOptionPane.INFORMATION_MESSAGE);
+                                loggedIn = true;
+                            } // end if
+                        } // end if
+                    } // end while
+                    EditAccountGUI editAccountGUI = new EditAccountGUI();
+                    SwingUtilities.invokeLater(editAccountGUI);
+                    while (editAccountGUI.getAction() == null) {
+                        Thread.onSpinWait();
+                    } // end while
+                    String action = editAccountGUI.getAction();
+                    out.write(action);
+                    out.println();
+                    out.flush();
+                    if (action.equals("username")) {
+                        String newUsername = JOptionPane.showInputDialog(null, "Enter new username",
+                                "Edit account", JOptionPane.QUESTION_MESSAGE);
+                        out.write(newUsername);
+                    } else if (action.equals("password")) {
+                        String newPassword = JOptionPane.showInputDialog(null, "Enter new password",
+                                "Edit account", JOptionPane.QUESTION_MESSAGE);
+                        out.write(newPassword);
+                    } else {
+                        int confirm = JOptionPane.showConfirmDialog(null, "Enter new password",
+                                "Edit account", JOptionPane.YES_NO_OPTION);
+                        if (confirm == JOptionPane.YES_OPTION) {
+                            out.write("yes");
+                        } else if (confirm == JOptionPane.NO_OPTION) {
+                            out.write("no");
                         }
-                    }
-                    loggedIn = true;
-                }
-            } //login complete
+                    } // end if
+                    out.println();
+                    out.flush();
+                } // end edit or delete account
+            } // login complete
+
+            // Display gui to give user messaging choices
+            MessageGUI messageGUI = new MessageGUI();
+            SwingUtilities.invokeLater(messageGUI);
 
             //
         }
@@ -115,7 +195,7 @@ public class MessageClient {
         ActionListener actionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //login GUI
+                // login GUI
                 if (e.getSource() == loginButton) {
                     username = usernameField.getText();
                     password = passwordField.getText();
@@ -142,14 +222,14 @@ public class MessageClient {
             loginFrame.setSize(400, 200);
             loginFrame.setLocationRelativeTo(null);
             loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            //username, password, login button on the CENTER
+            // username, password, login button on the CENTER
             JLabel labelU = new JLabel("Username");
             JLabel labelP = new JLabel("Password");
-            usernameField = new JTextField(10); //text field for username
+            usernameField = new JTextField(10); // text field for username
             usernameField.addActionListener(actionListener);
-            passwordField = new JTextField(10); //text field for password
+            passwordField = new JTextField(10); // text field for password
             passwordField.addActionListener(actionListener);
-            loginButton = new JButton("Login"); //login button
+            loginButton = new JButton("Login"); // login button
             loginButton.addActionListener(actionListener);
 
             JPanel panel1 = new JPanel();
@@ -165,10 +245,10 @@ public class MessageClient {
             panel3.add(panel1);
             panel3.add(panel2);
             panel3.add(loginButton);
-            JLabel labelOr = new JLabel("   Or");
+            JLabel labelOr = new JLabel("Or");
             panel3.add(labelOr);
             content.add(panel3, BorderLayout.CENTER);
-            // create account and edit or delete button on SOUTH
+            //  create account and edit or delete button on SOUTH
             createAccountButton = new JButton("Create account");
             createAccountButton.addActionListener(actionListener);
             editAccountButton = new JButton("Edit or delete account");
