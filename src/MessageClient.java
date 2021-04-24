@@ -24,7 +24,6 @@ public class MessageClient {
     static JButton createAccountButton;
     static JButton editAccountButton;
 
-
     public static void main(String[] args) {
         // connect to server
         try (Socket socket = new Socket("localhost", 1234)) {
