@@ -32,6 +32,7 @@ public class MessageClient {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             // reading from server
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
             // Log in GUI
             // login with username and password, or select "Create account" or "Edit or delete account"
             boolean loggedIn = false;
@@ -177,8 +178,6 @@ public class MessageClient {
             // Display gui to give user messaging choices
             MessageGUI messageGUI = new MessageGUI();
             SwingUtilities.invokeLater(messageGUI);
-
-            //
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -257,6 +256,50 @@ public class MessageClient {
             panel4.add(editAccountButton);
             content.add(panel4, BorderLayout.SOUTH);
             loginFrame.setVisible(true);
+        }
+    }
+
+    public class ServerThread implements Runnable {
+        private Socket socket;
+        private String name;
+        private BufferedReader serverIn;
+        private BufferedReader userIn;
+        private PrintWriter out;
+
+
+        Thread server = new Thread(new ServerThread(socket, name));
+
+        public void init() {
+            try {
+                Socket socket = new Socket("localhost", 1234);
+                server.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public ServerThread(Socket socket, String name) {
+            this.socket = socket;
+            this.name = name;
+        }
+
+        public void run() {
+            try {
+                out = new PrintWriter(socket.getOutputStream(), true);
+                serverIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                userIn = new BufferedReader(new InputStreamReader(System.in));
+
+                while (!socket.isClosed()) {
+                    if (serverIn.ready()) {
+                        String input = serverIn.readLine();
+                        if (input != null) {
+                            System.out.println(input);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
