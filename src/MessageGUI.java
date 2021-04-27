@@ -36,7 +36,7 @@ public class MessageGUI extends JComponent implements Runnable {
             // if user wants to edit message
             if (e.getSource() == editButton) {
                 frame.setVisible(false);
-                EditGUI edit = new EditGUI();
+                EditMessageGUI edit = new EditMessageGUI();
                 SwingUtilities.invokeLater(edit);
             } // end if
 
@@ -50,11 +50,11 @@ public class MessageGUI extends JComponent implements Runnable {
             // if user wants to view conversations
             if (e.getSource() == conversationsButton) {
                 frame.setVisible(false);
-                ViewConversationsGUI conversations = new ViewConversationsGUI();
+                ConversationsGUI conversations = new ConversationsGUI();
                 SwingUtilities.invokeLater(conversations);
             } // end if
         }
-    }; // actionlistener
+    }; // actionListener
 
     public void run() {
         frame = new JFrame("Messages"); // JFrame
