@@ -3,22 +3,22 @@ import java.util.ArrayList;
 
 public class Conversation {
 	private ArrayList<Message> messages;
-	private final User user1;
-	private final User user2;
+	private final ArrayList<User> convoUsers;
 
-	public Conversation(ArrayList<Message> messages, User user1, User user2) {
+	public Conversation(ArrayList<Message> messages, User ...users) {
 		this.messages = messages;
-		this.user1 = user1;
-		this.user2 = user2;
+		this.convoUsers = new ArrayList<User>();
+		for (User user : users) {
+			convoUsers.add(user);
+		}
 	}
 
 	public ArrayList<Message> getMessages() {
 		return messages;
 	}
 
-	public User[] getUsers() {
-		User[] userArray = {user1, user2};
-		return userArray;
+	public ArrayList<User> getConvoUsers() {
+		return convoUsers;
 	}
 
 	public void writeToFile() {
@@ -27,7 +27,11 @@ public class Conversation {
 			lines.add(message.toString());
 		}
 
-		String filename = user1.getID() + "|" + user2.getID() + ".txt";
+		String filename = "";
+		for (User user : convoUsers) {
+			filename = filename + user.getID() + "|";
+		}
+		filename = filename.substring(0, filename.length() - 1) + ".txt";
 
 		try (PrintWriter writer = new PrintWriter(new FileOutputStream(filename))) {
 			for (String line : lines) {
@@ -38,10 +42,14 @@ public class Conversation {
 		}
 	}
 
-	public static Conversation readFromFile(User user1, User user2) {
+	public static Conversation readFromFile(User ...users) {
 		ArrayList<Message> messages = new ArrayList<Message>();
 
-		String filename = user1.getID() + "|" + user2.getID() + ".txt";
+		String filename = "";
+                for (User user : users) {
+                        filename = filename + user.getID() + "|";
+                }
+                filename = filename.substring(0, filename.length() - 1) + ".txt";
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
 			String line = reader.readLine();
@@ -50,7 +58,7 @@ public class Conversation {
 				line = reader.readLine();
 			}
 
-			return new Conversation(messages, user1, user2);
+			return new Conversation(messages, users);
 
 		} catch (Exception e) {
 			e.printStackTrace();
