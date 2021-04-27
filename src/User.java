@@ -73,4 +73,18 @@ public class User {
 		throw new UserNotFoundException();
 	}
 
+	public ArrayList<Conversation> getConvosUserIsIn(User user) {
+		ArrayList<Conversation> userConvos =  new ArrayList<Conversation>();
+
+		for (Conversation conversation : Conversation.conversations) {
+			for (User convoUser : conversation.getConvoUsers()) {
+				if (user.getID() == convoUser.getID()) {
+					userConvos.add(conversation);
+				}
+			}
+		}
+
+		return userConvos;
+	}
+
 }

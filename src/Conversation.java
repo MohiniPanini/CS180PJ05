@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class Conversation {
 	private ArrayList<Message> messages;
 	private final ArrayList<User> convoUsers;
+	public static ArrayList<Conversation> conversations = new ArrayList<Conversation>();
 
 	public Conversation(ArrayList<Message> messages, User ...users) {
 		this.messages = messages;
