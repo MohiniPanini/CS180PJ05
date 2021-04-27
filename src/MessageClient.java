@@ -103,10 +103,10 @@ public class MessageClient {
                 } // create account complete
             } // login complete
 
-            // Display gui to give user conversations list
             boolean quit = false;
             // go back to conversationGUI until user closes app
             while (!quit) {
+                // Display gui to give user conversations list
                 ConversationsGUI conversationsGUI = new ConversationsGUI();
                 SwingUtilities.invokeLater(conversationsGUI);
                 while (conversationsGUI.getAction() == null) {

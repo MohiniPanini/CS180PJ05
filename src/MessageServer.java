@@ -169,9 +169,11 @@ public class MessageServer {
                     } // end create account
                 } // end login process
 
-                //conversation process
+
                 boolean quit = false;
+                // continue until user quits
                 while (!quit) {
+                    //conversation process
                     String conversationAction = in.readLine();
                     if (conversationAction.equals("create")) {
                         // create conversation process
