@@ -36,7 +36,7 @@ public class User {
 
 	public static void getAllUsersFromFile() {//format: [username|password|ID]
 		ArrayList<User> users = new ArrayList<User>();
-		try (BufferedReader reader = new BufferedReader(new FileReader("Users.txt"))) {
+		try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
 			String line = reader.readLine();
 			while (line != null) {
 				int firstSplit = line.indexOf("|");
@@ -54,7 +54,7 @@ public class User {
 
 	public static void writeAllUsersToFile() {
 		ArrayList<User> users = User.users;
-		try (PrintWriter writer = new PrintWriter(new FileOutputStream("Users.txt"))) {
+		try (PrintWriter writer = new PrintWriter(new FileOutputStream("users.txt"))) {
 			for (User user : users) {
 				writer.println(user.getUsername() + "|" + user.getPassword() + "|" + user.getID());
 			}
@@ -69,7 +69,6 @@ public class User {
 				return user;
 			}
 		}
-		
 		throw new UserNotFoundException();
 	}
 

@@ -14,6 +14,11 @@ public class Conversation {
 		}
 	}
 
+	public Conversation(ArrayList<Message> messages, ArrayList<User> convoUsers) {
+		this.messages = messages;
+		this.convoUsers = convoUsers;
+	}
+
 	public ArrayList<Message> getMessages() {
 		return messages;
 	}
@@ -43,14 +48,8 @@ public class Conversation {
 		}
 	}
 
-	public static Conversation readFromFile(User ...users) {
+	public static Conversation readFromFile(String filename) {
 		ArrayList<Message> messages = new ArrayList<Message>();
-
-		String filename = "";
-                for (User user : users) {
-                        filename = filename + user.getID() + "|";
-                }
-                filename = filename.substring(0, filename.length() - 1) + ".txt";
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
 			String line = reader.readLine();
@@ -59,11 +58,36 @@ public class Conversation {
 				line = reader.readLine();
 			}
 
-			return new Conversation(messages, users);
+			String[] userIDs = filename.split("|");
+			ArrayList<User> convoUsers = new ArrayList<User>();
+
+			for (String ID : userIDs) {
+				convoUsers.add(User.getUserByID(Integer.parseInt(ID)));
+			}
+
+			return new Conversation(messages, convoUsers);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
+		}
+	}
+
+	public static void readAllConversations() {
+		ArrayList<String> filenames = new ArrayList<String>();
+
+		try (BufferedReader reader = new BufferedReader(new FileReader("conversations.txt"))) {
+			String filename = reader.readLine();
+			while (filename != null) {
+				filenames.add(filename);
+				filename = reader.readLine();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		for (String filename : filenames) {
+			conversations.add(readFromFile(filename));
 		}
 	}
 }
