@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * src.editGUI
+ * EditMessageGUI
  *
  * Represents the gui if the user chooses to edit their messages
  *
@@ -10,7 +10,7 @@ import java.awt.*;
  * @version April 19, 2021
  */
 
-public class EditGUI extends JComponent implements Runnable {
+public class EditMessageGUI extends JComponent implements Runnable {
 
     // Fields
     private JFrame editFrame;
