@@ -68,19 +68,9 @@ public class MessageServer {
                 boolean loggedIn = false;
                 User user = null;
 
-                while (!clientSocket.isClosed()) {
-                    String input = in.readLine();
-                    if (input != null) {
-                        for (MessageThread messageThread : messageThreadList) {
-                            messageThread.getWriter().write(input);
-                        }
-                    }
-                }
-
                 // loop until successful login
                 while (!loggedIn) {
-                    String action;
-                    action = in.readLine();
+                    String action = in.readLine();
                     // log in
                     if (action.equals("login")) {
                         String usernamePassword = in.readLine();
@@ -98,13 +88,11 @@ public class MessageServer {
                         } // end while
                         if (loggedIn) {
                             out.write("loggedIn");
-                            out.println();
-                            out.flush();
                         } else {
                             out.write("Username or Password is incorrect");
-                            out.println();
-                            out.flush();
                         } // end if
+                        out.println();
+                        out.flush();
                     } // end if, end login
 
                     // create account
@@ -221,6 +209,16 @@ public class MessageServer {
                     // viewing selected conversation
                     else {
                         // viewing conversation process here
+
+                        // messaging process
+                        while (!clientSocket.isClosed()) {
+                            String input = in.readLine();
+                            if (input != null) {
+                                for (MessageThread messageThread : messageThreadList) {
+                                    messageThread.getWriter().write(input);
+                                }
+                            }
+                        }
                     }
                 }
 

@@ -116,7 +116,9 @@ public class MessageClient {
                 out.println();
                 out.flush();
                 if (conversationsGUI.getAction().equals("create")) {
-                    // creating conversation process comes here
+                    while (true) {
+                        Thread.onSpinWait();
+                    } // end while
                 }
                 // edit or delete account
                 else if (conversationsGUI.getAction().equals("edit")) {

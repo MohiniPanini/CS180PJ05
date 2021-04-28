@@ -14,7 +14,6 @@ public class LoginGUI extends JComponent implements Runnable {
     static JTextField passwordField;
     static JButton loginButton;
     static JButton createAccountButton;
-    static JButton editAccountButton;
 
     public LoginGUI() {
         action = null;
