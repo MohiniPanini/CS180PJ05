@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class User {
@@ -50,6 +51,7 @@ public class User {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public static void writeAllUsersToFile() {

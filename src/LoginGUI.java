@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginGUI extends JComponent implements Runnable {
-    private static String username;
+    public static String username;
     private static String password;
     private static String action;
 

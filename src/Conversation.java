@@ -90,4 +90,6 @@ public class Conversation {
 			conversations.add(readFromFile(filename));
 		}
 	}
+
+
 }

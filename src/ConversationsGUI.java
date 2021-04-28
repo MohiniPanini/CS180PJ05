@@ -2,9 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
- * viewConversationsGUI
+ * ConversationsGUI
  *
  * Represents the gui that allows the user to view all conversations
  *
@@ -67,8 +68,66 @@ public class ConversationsGUI extends JComponent implements Runnable {
         JPanel panel2 = new JPanel();
         panel2.add(title);
 
+        // Display conversations
+        JPanel scrollPanel = new JPanel();
+        JScrollPane jsp = new JScrollPane(scrollPanel);
+        jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        // use usersConversations method to get all the conversations the logged in user has
+        ConversationsGUI conversationsGUI = new ConversationsGUI();
+        ArrayList<Conversation> conversations = conversationsGUI.usersConversations();
+
+
+        for (Conversation conversation : conversations) {
+
+            // each JLabel
+            ArrayList<User> users = conversation.getConvoUsers();
+            String usersString = users.toString();
+            JLabel conversationsLabel = new JLabel(usersString);
+
+            // each button
+            JButton conversationButton = new JButton("Select");
+            conversationButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                }
+            });
+
+
+            // Create inner panel and add to scrollable panel
+            JPanel labelAndButtonPanel = new JPanel();
+            labelAndButtonPanel.add(conversationsLabel);
+            labelAndButtonPanel.add(conversationButton);
+            jsp.add(labelAndButtonPanel);
+
+        }
+
         conversationsContent.add(panel1, BorderLayout.NORTH);
         conversationsContent.add(panel2, BorderLayout.CENTER);
+        conversationsContent.add(jsp, BorderLayout.SOUTH);
         conversationsFrame.setVisible(true);
     } // run
+
+    public ArrayList<Conversation> usersConversations() {
+        // for each conversation in application
+        ArrayList<Conversation> userConversations = new ArrayList<>();
+        for (Conversation conversation : Conversation.conversations) {
+
+            // for each user in the conversation
+            for (User loggedIN : conversation.getConvoUsers()) {
+
+                if (loggedIN.getUsername().equals(LoginGUI.username)) {
+                    userConversations.add(conversation);
+                }
+            }
+        }
+
+        System.out.println(Conversation.conversations.toString());
+        System.out.println(userConversations.toString());
+
+        return userConversations;
+
+    }
 }
