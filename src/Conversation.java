@@ -1,9 +1,11 @@
 import java.io.*;
+import java.nio.file.ProviderNotFoundException;
 import java.util.ArrayList;
 
 public class Conversation {
 	private ArrayList<Message> messages;
 	private final ArrayList<User> convoUsers;
+	// static varibale of all conversations
 	public static ArrayList<Conversation> conversations = new ArrayList<Conversation>();
 
 	public Conversation(ArrayList<Message> messages, User ...users) {
@@ -39,14 +41,42 @@ public class Conversation {
 		}
 		filename = filename.substring(0, filename.length() - 1) + ".txt";
 
-		try (PrintWriter writer = new PrintWriter(new FileOutputStream(filename))) {
+		try (PrintWriter writer = new PrintWriter(new FileOutputStream(filename, true))) {
 			for (String line : lines) {
 				writer.println(line);
 			}
-		} catch (Exception e) {
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		File file = new File("Conversations.txt");
+		try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, true))) {
+			try (BufferedReader bfr = new BufferedReader(new FileReader(file))) {
+				String line = bfr.readLine();
+
+				if (line == null) {
+					writer.println(filename);
+				}
+
+				while (line != null) {
+					if (!filename.equals(line)) {
+						writer.println(filename);
+						line = bfr.readLine();
+					}
+				}
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
+
 
 	public static Conversation readFromFile(String filename) {
 		ArrayList<Message> messages = new ArrayList<Message>();
@@ -58,8 +88,9 @@ public class Conversation {
 				line = reader.readLine();
 			}
 
-			String[] userIDs = filename.split("|");
-			ArrayList<User> convoUsers = new ArrayList<User>();
+			String[] userIDs = filename.split("\\.");
+			ArrayList<User> convoUsers = new ArrayList<>();
+
 
 			for (String ID : userIDs) {
 				convoUsers.add(User.getUserByID(Integer.parseInt(ID)));
@@ -76,7 +107,7 @@ public class Conversation {
 	public static void readAllConversations() {
 		ArrayList<String> filenames = new ArrayList<String>();
 
-		try (BufferedReader reader = new BufferedReader(new FileReader("conversations.txt"))) {
+		try (BufferedReader reader = new BufferedReader(new FileReader("Conversations.txt"))) {
 			String filename = reader.readLine();
 			while (filename != null) {
 				filenames.add(filename);

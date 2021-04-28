@@ -159,6 +159,7 @@ public class MessageServer {
                                             } // end while
                                         } // end while
                                         user = new User(username, password, id);
+                                        User.users.add(user); // add user to static array of all users
                                         PrintWriter writer = new PrintWriter(new FileOutputStream("Users.txt", true));
                                         writer.println(user.getUsername() + "|" + user.getPassword() + "|" + user.getID());
                                         writer.close();

@@ -21,6 +21,12 @@ public class ConversationsGUI extends JComponent implements Runnable {
     private JButton createButton;
     private JButton editAccountButton;
 
+
+    // static varibale of all currently logged in users conversations
+    public static ArrayList<Conversation> usersConversations;
+
+    private JFrame messagesFrame;
+
     public String getAction() {
         return action;
     }
@@ -74,35 +80,37 @@ public class ConversationsGUI extends JComponent implements Runnable {
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        // use usersConversations method to get all the conversations the logged in user has
-        ConversationsGUI conversationsGUI = new ConversationsGUI();
-        ArrayList<Conversation> conversations = conversationsGUI.usersConversations();
 
+        if (usersConversations != null) {
+            for (Conversation conversation : usersConversations) {
 
-        for (Conversation conversation : conversations) {
+                // each JLabel
+                ArrayList<User> users = conversation.getConvoUsers();
+                String usersString = users.toString();
+                JLabel conversationsLabel = new JLabel(usersString);
 
-            // each JLabel
-            ArrayList<User> users = conversation.getConvoUsers();
-            String usersString = users.toString();
-            JLabel conversationsLabel = new JLabel(usersString);
+                // each button
+                JButton conversationButton = new JButton("Select");
+                conversationButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
 
-            // each button
-            JButton conversationButton = new JButton("Select");
-            conversationButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+                        // if select is clicked open associated messages
+                        if (e.getSource() == conversationButton) {
 
-                }
-            });
+                        }
 
+                    }
+                });
 
-            // Create inner panel and add to scrollable panel
-            JPanel labelAndButtonPanel = new JPanel();
-            labelAndButtonPanel.add(conversationsLabel);
-            labelAndButtonPanel.add(conversationButton);
-            jsp.add(labelAndButtonPanel);
-
+                // Create inner panel and add to scrollable panel
+                JPanel labelAndButtonPanel = new JPanel();
+                labelAndButtonPanel.add(conversationsLabel);
+                labelAndButtonPanel.add(conversationButton);
+                jsp.add(labelAndButtonPanel);
+            }
         }
+
 
         conversationsContent.add(panel1, BorderLayout.NORTH);
         conversationsContent.add(panel2, BorderLayout.CENTER);
@@ -110,15 +118,26 @@ public class ConversationsGUI extends JComponent implements Runnable {
         conversationsFrame.setVisible(true);
     } // run
 
-    public ArrayList<Conversation> usersConversations() {
+    // return the conversations of the currently logged in user
+    public static ArrayList<Conversation> usersConversations() {
         // for each conversation in application
         ArrayList<Conversation> userConversations = new ArrayList<>();
+
+
+        // Get all conversations in file into array
+        Conversation.readAllConversations();
+
+        // Determine which of the conversations are associated with currently logged in user
         for (Conversation conversation : Conversation.conversations) {
 
             // for each user in the conversation
             for (User loggedIN : conversation.getConvoUsers()) {
+                System.out.println(loggedIN);
+                System.out.println(conversation);
 
                 if (loggedIN.getUsername().equals(LoginGUI.username)) {
+                    System.out.println("test");
+                    System.out.println(conversation);
                     userConversations.add(conversation);
                 }
             }
@@ -130,4 +149,5 @@ public class ConversationsGUI extends JComponent implements Runnable {
         return userConversations;
 
     }
+
 }

@@ -2,10 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
@@ -25,18 +22,27 @@ public class CreateGUI extends  JComponent implements Runnable {
     private JFrame createFrame;
     private JTextField sendToTextField;
     private JTextField messageTextField;
-    private JButton sendButton;
+    public static JButton sendButton;
+
+    public boolean sendClicked;
 
     // Actionlistener
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+
+
             if (e.getSource() == sendButton) {
+
+                sendClicked = true;
                 // Create conversation object with info and write to conversations file
                 CreateGUI create = new CreateGUI();
                 Conversation newConversation = create.createConversation(sendToTextField.getText(),
                         messageTextField.getText());
                 newConversation.writeToFile();
+
+                ConversationsGUI.usersConversations = ConversationsGUI.usersConversations();
+
                 createFrame.setVisible(false);
             }
         }
@@ -125,10 +131,11 @@ public class CreateGUI extends  JComponent implements Runnable {
                 }
             }
 
-        // if there are multiple
+        // if there aren't multiple
         } else {
             for (User singleUser : usersInApplication) {
                 if (receivers.equals(singleUser.getUsername())) {
+                    System.out.println("test");
                     users.add(singleUser);
                     count++;
                 }
@@ -157,9 +164,10 @@ public class CreateGUI extends  JComponent implements Runnable {
         messageArrayList.add(message);
 
         Conversation returnedConversation = new Conversation(messageArrayList, users);
-        Conversation.conversations.add(returnedConversation);
 
         // return conversatoin
         return returnedConversation;
     } // createConversation
+
+
 }

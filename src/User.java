@@ -66,12 +66,19 @@ public class User {
 	}
 
 	public static User getUserByID(int ID) throws UserNotFoundException {
+
+		User userReturned = null;
 		for (User user : User.users) {
 			if (user.getID() == ID) {
-				return user;
+				userReturned = user;
 			}
 		}
-		throw new UserNotFoundException();
+
+		if (userReturned == null) {
+			throw new UserNotFoundException();
+		}
+
+		return userReturned;
 	}
 
 	public ArrayList<Conversation> getConvosUserIsIn(User user) {
@@ -87,5 +94,6 @@ public class User {
 
 		return userConvos;
 	}
+
 
 }
