@@ -10,7 +10,7 @@ import java.util.List;
  *
  * Server for the Messaging app.
  *
- * @author
+ * @author Luka Narisawa,
  * @version April 17, 2021
  */
 public class MessageServer {
@@ -186,33 +186,17 @@ public class MessageServer {
                             } // end if
                         } // end while
                     } // end create account
+                } // end login process
 
-                    // edit or delete account
-                    else if (action.equals("edit")) {
-                        while (!loggedIn) {
-                            String usernamePassword = in.readLine();
-                            BufferedReader bfr = new BufferedReader(new FileReader("Users.txt"));
-                            String line = bfr.readLine();
-                            while (line != null) {
-                                String userInfo = line.substring(0, line.lastIndexOf("|"));
-                                if (userInfo.equals(usernamePassword)) {
-                                    loggedIn = true;
-                                    int id = Integer.parseInt(line.substring(line.lastIndexOf("|") + 1));
-                                    User.getAllUsersFromFile();
-                                    user = User.getUserByID(id);
-                                }
-                                line = bfr.readLine();
-                            } // end while
-                            if (loggedIn) {
-                                out.write("loggedIn");
-                                out.println();
-                                out.flush();
-                            } else {
-                                out.write("Username or Password is incorrect");
-                                out.println();
-                                out.flush();
-                            } // end if
-                        } // end login
+
+                boolean quit = false;
+                // continue until user quits
+                while (!quit) {
+                    //conversation process
+                    String conversationAction = in.readLine();
+                    if (conversationAction.equals("create")) {
+                        // create conversation process
+                    } else if (conversationAction.equals("edit")) {
                         String editAction = in.readLine();
                         if (editAction.equals("username")) {
                             String username = in.readLine();
@@ -233,8 +217,12 @@ public class MessageServer {
                                 User.writeAllUsersToFile();
                             } // end if
                         } // end if
-                    } // end edit or delete account
-                } // end login process
+                    }
+                    // viewing selected conversation
+                    else {
+                        // viewing conversation process here
+                    }
+                }
 
 
             } catch (Exception e) {
