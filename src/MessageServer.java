@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MessageServer
@@ -12,19 +14,26 @@ import java.util.Random;
  * @version April 17, 2021
  */
 public class MessageServer {
+    public static ArrayList<MessageThread> messageThreadList = new ArrayList<>();
+
+    public ArrayList<MessageThread> getMessageThreadList() {
+        return messageThreadList;
+    }
+
     // runs multiple threads for clients
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
+        MessageThread messageThread = null;
         try {
             serverSocket = new ServerSocket(1234);
             serverSocket.setReuseAddress(true);
             // loop for multiple clients
             while (true) {
                 Socket client = serverSocket.accept();
-
-                // create a thread
-                MessageThread messageThread = new MessageThread(client);
-                new Thread(messageThread).start();
+                messageThread = new MessageThread(client);
+                Thread thread = new Thread(messageThread);
+                thread.start();
+                messageThreadList.add(messageThread);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -36,20 +45,21 @@ public class MessageServer {
                     e.printStackTrace();
                 } // end try
             } // end if
-        } // end try
+        }// end try
     } // main
-
 
     private static class MessageThread implements Runnable {
         private final Socket clientSocket;
+        private BufferedReader in;
+        private PrintWriter out;
 
-        public MessageThread(Socket socket) {
-            this.clientSocket = socket;
+        public MessageThread(Socket clientSocket) {
+            this.clientSocket = clientSocket;
         }
+
+
         // run method for server actions
         public void run() {
-            PrintWriter out = null;
-            BufferedReader in = null;
             try {
                 // get output
                 out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -58,8 +68,17 @@ public class MessageServer {
                 boolean loggedIn = false;
                 User user = null;
 
+                while (!clientSocket.isClosed()) {
+                    String input = in.readLine();
+                    if (input != null) {
+                        for (MessageThread messageThread : messageThreadList) {
+                            messageThread.getWriter().write(input);
+                        }
+                    }
+                }
+
                 // loop until successful login
-                while(!loggedIn) {
+                while (!loggedIn) {
                     String action;
                     action = in.readLine();
                     // log in
@@ -221,6 +240,10 @@ public class MessageServer {
                     e.printStackTrace();
                 }
             }
+        } //end run
+        public PrintWriter getWriter() {
+            return out;
         }
     }
 }
+
