@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Message {
 	private final User user;
-	private final String message;
+	private String message;
 	private final LocalDateTime time;
 
 	public Message(User user, String message) {
@@ -18,6 +18,10 @@ public class Message {
                 this.message = message;
                 this.time = time;
         }
+    public void setMessage(String message) {
+		this.message = message;
+	}
+
 
 	public User getUser() {
 		return user;

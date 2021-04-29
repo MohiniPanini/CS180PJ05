@@ -86,8 +86,13 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
                 // each JLabel
                 ArrayList<User> users = conversation.getConvoUsers();
-                String usersString = users.toString();
-                JLabel conversationsLabel = new JLabel(usersString);
+
+                // Create string of all users usernames with space in between
+                StringBuilder usersString = new StringBuilder();
+                for (User user : users) {
+                    usersString.append(user.getUsername()).append(" ");
+                }
+                JLabel conversationsLabel = new JLabel(String.valueOf(usersString));
 
                 // each button
                 JButton conversationButton = new JButton("Select");
@@ -97,6 +102,50 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
                         // if select is clicked open associated messages
                         if (e.getSource() == conversationButton) {
+
+                            // Get messages for conversation button that was clicked
+                            ArrayList<Message> conversationMessages = conversation.getMessages();
+
+                            // Create new frame for messages
+                            messagesFrame = new JFrame();
+                            Container messageContent = messagesFrame.getContentPane();
+
+                            // scroll panel for messages
+                            JPanel messagesScrollPanel = new JPanel();
+                            JScrollPane messagesJSP = new JScrollPane(messagesScrollPanel);
+                            messagesJSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+                            messagesJSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+                            if (conversationMessages != null) {
+                                for (Message message : conversationMessages) {
+
+                                    // text field for each message so they can edit
+                                    JTextField messageTextField = new JTextField(10);
+                                    messageTextField.setText(message.getMessage());
+
+                                    // each button to confirm update to message
+                                    JButton messageButton = new JButton("Submit Edit");
+
+                                    // if user clicks the button then the associated message is updated
+                                    messageButton.addActionListener(new ActionListener() {
+                                        @Override
+                                        public void actionPerformed(ActionEvent e) {
+
+                                            // update message in that conversation messages
+                                            message.setMessage(messageTextField.getText());
+
+                                        }
+                                    });
+
+                                    JPanel textAndButtonPanel = new JPanel();
+                                    textAndButtonPanel.add(messageTextField);
+                                    textAndButtonPanel.add(messageButton);
+                                    messagesJSP.add(textAndButtonPanel);
+                                    messageContent.add(messagesJSP);
+
+                                }
+                            }
+
 
                         }
 
@@ -108,13 +157,13 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 labelAndButtonPanel.add(conversationsLabel);
                 labelAndButtonPanel.add(conversationButton);
                 jsp.add(labelAndButtonPanel);
+                conversationsContent.add(jsp, BorderLayout.SOUTH);
             }
         }
 
 
         conversationsContent.add(panel1, BorderLayout.NORTH);
         conversationsContent.add(panel2, BorderLayout.CENTER);
-        conversationsContent.add(jsp, BorderLayout.SOUTH);
         conversationsFrame.setVisible(true);
     } // run
 
