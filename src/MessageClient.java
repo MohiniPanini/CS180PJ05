@@ -54,7 +54,7 @@ public class MessageClient {
                     boolean created = false;
                     while(!created) {
                         String username = null;
-                         String password = null;
+                        String password = null;
                         while (created == false && (username == null || username.equals(""))) {
                             username = JOptionPane.showInputDialog(null, "Enter username",
                                     "Create account", JOptionPane.QUESTION_MESSAGE);
@@ -108,6 +108,8 @@ public class MessageClient {
             while (!quit) {
                 // Display gui to give user conversations list
                 ConversationsGUI conversationsGUI = new ConversationsGUI();
+                User.getAllUsersFromFile();
+                ConversationsGUI.usersConversations = conversationsGUI.usersConversations();
                 SwingUtilities.invokeLater(conversationsGUI);
                 while (conversationsGUI.getAction() == null) {
                     Thread.onSpinWait();
@@ -116,9 +118,21 @@ public class MessageClient {
                 out.println();
                 out.flush();
                 if (conversationsGUI.getAction().equals("create")) {
-                    while (true) {
+                    CreateGUI create = new CreateGUI();
+                    SwingUtilities.invokeLater(create);
+                    while (!create.isSendClicked()) {
                         Thread.onSpinWait();
                     } // end while
+                    String userString = in.readLine();
+                    int firstBar = userString.indexOf("|");
+                    int secondBar = userString.lastIndexOf("|");
+                    String username = userString.substring(0, firstBar);
+                    String password = userString.substring(firstBar + 1, secondBar);
+                    int id = Integer.parseInt(userString.substring(secondBar + 1));
+                    User user = new User(username, password, id);
+                    Conversation newConversation = create.createConversation(create.getSendToTextField().getText(),
+                            create.getMessageTextField().getText(), user);
+                    newConversation.writeToFile();
                 }
                 // edit or delete account
                 else if (conversationsGUI.getAction().equals("edit")) {
@@ -159,7 +173,8 @@ public class MessageClient {
                 }
                 // viewing selected conversation
                 else {
-                    // viewing conversation process here
+                    MessageGUI messageGUI = new MessageGUI();
+                    SwingUtilities.invokeLater(messageGUI);
                 }
             }
 

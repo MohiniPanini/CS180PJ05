@@ -1,9 +1,7 @@
-import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * MessageServer
@@ -184,8 +182,9 @@ public class MessageServer {
                     //conversation process
                     String conversationAction = in.readLine();
                     if (conversationAction.equals("create")) {
-                        // create conversation process
-
+                        out.write(user.toString());
+                        out.println();
+                        out.flush();
 
                     } else if (conversationAction.equals("edit")) {
                         String editAction = in.readLine();
@@ -213,15 +212,7 @@ public class MessageServer {
                     else {
                         // viewing conversation process here
 
-                        // messaging process
-                        while (!clientSocket.isClosed()) {
-                            String input = in.readLine();
-                            if (input != null) {
-                                for (MessageThread messageThread : messageThreadList) {
-                                    messageThread.getWriter().write(input);
-                                }
-                            }
-                        }
+
                     }
                 }
 

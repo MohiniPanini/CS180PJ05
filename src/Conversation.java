@@ -34,7 +34,6 @@ public class Conversation {
 		for (Message message : messages) {
 			lines.add(message.toString());
 		}
-
 		String filename = "";
 		for (User user : convoUsers) {
 			filename = filename + user.getID() + "|";
@@ -50,31 +49,27 @@ public class Conversation {
 			e.printStackTrace();
 		}
 
-		File file = new File("Conversations.txt");
-		try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, true))) {
-			try (BufferedReader bfr = new BufferedReader(new FileReader(file))) {
+		try (PrintWriter writer = new PrintWriter(new FileOutputStream("Conversations.txt", true))) {
+			try (BufferedReader bfr = new BufferedReader(new FileReader("Conversations.txt"))) {
 				String line = bfr.readLine();
 
 				if (line == null) {
 					writer.println(filename);
 				}
-
 				while (line != null) {
 					if (!filename.equals(line)) {
 						writer.println(filename);
-						line = bfr.readLine();
 					}
+					line = bfr.readLine();
 				}
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
 
 
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 
@@ -87,11 +82,10 @@ public class Conversation {
 				messages.add(Message.fromString(line));
 				line = reader.readLine();
 			}
-
-			String[] userIDs = filename.split("\\.");
+			int period = filename.indexOf(".");
+			filename = filename.substring(0, period);
+			String[] userIDs = filename.split("\\|");
 			ArrayList<User> convoUsers = new ArrayList<>();
-
-
 			for (String ID : userIDs) {
 				convoUsers.add(User.getUserByID(Integer.parseInt(ID)));
 			}

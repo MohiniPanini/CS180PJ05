@@ -19,11 +19,24 @@ import java.time.LocalDateTime;
 public class CreateGUI extends  JComponent implements Runnable {
 
     // Fields
-    public static JFrame createFrame;
-    public static JTextField sendToTextField;
-    public static JTextField messageTextField;
-    public static JButton sendButton;
+    private JFrame createFrame;
+    private JTextField sendToTextField;
+    private JTextField messageTextField;
+    private static JButton sendButton;
 
+    private boolean sendClicked;
+
+    public JTextField getSendToTextField() {
+        return sendToTextField;
+    }
+
+    public JTextField getMessageTextField() {
+        return messageTextField;
+    }
+
+    public boolean isSendClicked() {
+        return sendClicked;
+    }
 
     // Actionlistener
     ActionListener actionListener = new ActionListener() {
@@ -32,17 +45,10 @@ public class CreateGUI extends  JComponent implements Runnable {
 
 
             if (e.getSource() == sendButton) {
-
                 // Create conversation object with info and write to conversations file
-                CreateGUI create = new CreateGUI();
-                Conversation newConversation = create.createConversation(CreateGUI.sendToTextField.getText(),
-                        CreateGUI.messageTextField.getText());
-                newConversation.writeToFile();
+                sendClicked = true;
 
-                ConversationsGUI.usersConversations = ConversationsGUI.usersConversations();
-
-                CreateGUI.createFrame.setVisible(false);
-
+                createFrame.setVisible(false);
             }
         }
     };
@@ -89,11 +95,12 @@ public class CreateGUI extends  JComponent implements Runnable {
     } // run
 
     // Creates conversation object when send button is clicked
-    public Conversation createConversation(String receivers, String messageBox) {
+    public Conversation createConversation(String receivers, String messageBox, User sender) {
 
 
         // Create array list of users
         ArrayList<User> users = new ArrayList<>();
+        users.add(sender);
 
         // obtain array list of all users that are in the application
         ArrayList<User> usersInApplication = new ArrayList<User>();
@@ -134,7 +141,6 @@ public class CreateGUI extends  JComponent implements Runnable {
         } else {
             for (User singleUser : usersInApplication) {
                 if (receivers.equals(singleUser.getUsername())) {
-                    System.out.println("test");
                     users.add(singleUser);
                     count++;
                 }
