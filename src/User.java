@@ -35,6 +35,11 @@ public class User {
 		return ID;
 	}
 
+	@Override
+	public String toString() {
+		return username + "|" + password + "|" + ID;
+	}
+
 	public static void getAllUsersFromFile() {//format: [username|password|ID]
 		ArrayList<User> users = new ArrayList<User>();
 		try (BufferedReader reader = new BufferedReader(new FileReader("Users.txt"))) {
@@ -56,7 +61,7 @@ public class User {
 
 	public static void writeAllUsersToFile() {
 		ArrayList<User> users = User.users;
-		try (PrintWriter writer = new PrintWriter(new FileOutputStream("Users.txt"))) {
+		try (PrintWriter writer = new PrintWriter(new FileOutputStream("users.txt"))) {
 			for (User user : users) {
 				writer.println(user.getUsername() + "|" + user.getPassword() + "|" + user.getID());
 			}
@@ -66,7 +71,6 @@ public class User {
 	}
 
 	public static User getUserByID(int ID) throws UserNotFoundException {
-
 		User userReturned = null;
 		for (User user : User.users) {
 			if (user.getID() == ID) {
