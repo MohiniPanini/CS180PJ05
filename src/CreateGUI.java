@@ -22,9 +22,21 @@ public class CreateGUI extends  JComponent implements Runnable {
     private JFrame createFrame;
     private JTextField sendToTextField;
     private JTextField messageTextField;
-    public static JButton sendButton;
+    private static JButton sendButton;
 
-    public boolean sendClicked;
+    private boolean sendClicked;
+
+    public JTextField getSendToTextField() {
+        return sendToTextField;
+    }
+
+    public JTextField getMessageTextField() {
+        return messageTextField;
+    }
+
+    public boolean isSendClicked() {
+        return sendClicked;
+    }
 
     // Actionlistener
     ActionListener actionListener = new ActionListener() {
@@ -33,15 +45,8 @@ public class CreateGUI extends  JComponent implements Runnable {
 
 
             if (e.getSource() == sendButton) {
-
-                sendClicked = true;
                 // Create conversation object with info and write to conversations file
-                CreateGUI create = new CreateGUI();
-                Conversation newConversation = create.createConversation(sendToTextField.getText(),
-                        messageTextField.getText());
-                newConversation.writeToFile();
-
-                ConversationsGUI.usersConversations = ConversationsGUI.usersConversations();
+                sendClicked = true;
 
                 createFrame.setVisible(false);
             }
@@ -90,11 +95,12 @@ public class CreateGUI extends  JComponent implements Runnable {
     } // run
 
     // Creates conversation object when send button is clicked
-    public Conversation createConversation(String receivers, String messageBox) {
+    public Conversation createConversation(String receivers, String messageBox, User sender) {
 
 
         // Create array list of users
         ArrayList<User> users = new ArrayList<>();
+        users.add(sender);
 
         // obtain array list of all users that are in the application
         ArrayList<User> usersInApplication = new ArrayList<User>();
@@ -135,7 +141,6 @@ public class CreateGUI extends  JComponent implements Runnable {
         } else {
             for (User singleUser : usersInApplication) {
                 if (receivers.equals(singleUser.getUsername())) {
-                    System.out.println("test");
                     users.add(singleUser);
                     count++;
                 }
