@@ -1,5 +1,6 @@
 username1|Password1|60721630
 username2|Password2|54314883
 username3|Password3|74628191
-purdue|Purdue1234|79004268
+purdue3|Purdue1234|79004268
 1|2|12345678
+purdue2|Purdue12345|75530832

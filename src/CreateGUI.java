@@ -19,12 +19,11 @@ import java.time.LocalDateTime;
 public class CreateGUI extends  JComponent implements Runnable {
 
     // Fields
-    private JFrame createFrame;
-    private JTextField sendToTextField;
-    private JTextField messageTextField;
+    public static JFrame createFrame;
+    public static JTextField sendToTextField;
+    public static JTextField messageTextField;
     public static JButton sendButton;
 
-    public boolean sendClicked;
 
     // Actionlistener
     ActionListener actionListener = new ActionListener() {
@@ -34,16 +33,16 @@ public class CreateGUI extends  JComponent implements Runnable {
 
             if (e.getSource() == sendButton) {
 
-                sendClicked = true;
                 // Create conversation object with info and write to conversations file
                 CreateGUI create = new CreateGUI();
-                Conversation newConversation = create.createConversation(sendToTextField.getText(),
-                        messageTextField.getText());
+                Conversation newConversation = create.createConversation(CreateGUI.sendToTextField.getText(),
+                        CreateGUI.messageTextField.getText());
                 newConversation.writeToFile();
 
                 ConversationsGUI.usersConversations = ConversationsGUI.usersConversations();
 
-                createFrame.setVisible(false);
+                CreateGUI.createFrame.setVisible(false);
+
             }
         }
     };
