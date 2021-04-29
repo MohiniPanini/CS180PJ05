@@ -22,7 +22,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
     private JButton editAccountButton;
 
 
-    // static varibale of all currently logged in users conversations
+    // static variable of all currently logged in users conversations
     public static ArrayList<Conversation> usersConversations;
 
     private JFrame messagesFrame;
@@ -41,8 +41,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
             // if user wants to create message
             if (e.getSource() == createButton) {
                 conversationsFrame.setVisible(false);
-                CreateGUI create = new CreateGUI();
-                SwingUtilities.invokeLater(create);
                 action = "create";
             } else if (e.getSource() == editAccountButton) {
                 conversationsFrame.setVisible(false);
@@ -80,10 +78,8 @@ public class ConversationsGUI extends JComponent implements Runnable {
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-
         if (usersConversations != null) {
             for (Conversation conversation : usersConversations) {
-
                 // each JLabel
                 ArrayList<User> users = conversation.getConvoUsers();
 
@@ -145,10 +141,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
                                 }
                             }
-
-
                         }
-
                     }
                 });
 
@@ -157,18 +150,18 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 labelAndButtonPanel.add(conversationsLabel);
                 labelAndButtonPanel.add(conversationButton);
                 jsp.add(labelAndButtonPanel);
-                conversationsContent.add(jsp, BorderLayout.SOUTH);
             }
         }
 
 
         conversationsContent.add(panel1, BorderLayout.NORTH);
         conversationsContent.add(panel2, BorderLayout.CENTER);
+        conversationsContent.add(jsp, BorderLayout.SOUTH);
         conversationsFrame.setVisible(true);
     } // run
 
     // return the conversations of the currently logged in user
-    public static ArrayList<Conversation> usersConversations() {
+    public ArrayList<Conversation> usersConversations() {
         // for each conversation in application
         ArrayList<Conversation> userConversations = new ArrayList<>();
 
