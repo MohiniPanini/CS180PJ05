@@ -173,7 +173,8 @@ public class MessageClient {
                 }
                 // viewing selected conversation
                 else {
-                    // viewing conversation process here
+                    MessageGUI messageGUI = new MessageGUI();
+                    SwingUtilities.invokeLater(messageGUI);
                 }
             }
 
