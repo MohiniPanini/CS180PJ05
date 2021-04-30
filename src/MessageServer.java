@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.util.Random;
 import java.util.ArrayList;
+import java.io.OutputStream;
 
 /**
  * MessageServer
@@ -20,18 +21,22 @@ public class MessageServer {
 
     // runs multiple threads for clients
     public static void main(String[] args) {
+        int port = 1234;
         ServerSocket serverSocket = null;
         MessageThread messageThread = null;
         try {
-            serverSocket = new ServerSocket(1234);
+            serverSocket = new ServerSocket(port);
             serverSocket.setReuseAddress(true);
             // loop for multiple clients
             while (true) {
                 Socket client = serverSocket.accept();
+                OutputStream outputStream = client.getOutputStream();
+                ServerThread serverThread = new ServerThread(client);
+                serverThread.start();
+
                 messageThread = new MessageThread(client);
                 Thread thread = new Thread(messageThread);
                 thread.start();
-                messageThreadList.add(messageThread);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -20,6 +20,10 @@ public class MessageClient {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             // reading from server
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+
+
+
             // Log in GUI
             // login with username and password, or select "Create account" or "Edit or delete account"
             boolean loggedIn = false;
