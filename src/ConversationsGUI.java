@@ -78,6 +78,9 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
         if (usersConversations != null) {
             System.out.println(usersConversations);
+            // Array for select buttons
+            JButton[] selectButtons = new JButton[usersConversations.size()];
+            int count = 0;
             for (Conversation conversation : usersConversations) {
                 // each JLabel
                 ArrayList<User> users = conversation.getConvoUsers();;
@@ -92,13 +95,15 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 JLabel conversationsLabel = new JLabel(String.valueOf(usersString));
 
                 // each button
-                JButton conversationButton = new JButton("Select");
-                conversationButton.addActionListener(new ActionListener() {
+
+                selectButtons[count] = new JButton("Select " + count);
+                int finalCount = count;
+                selectButtons[count].addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
 
                         // if select is clicked open associated messages
-                        if (e.getSource() == conversationButton) {
+                        if (e.getSource() == selectButtons[finalCount]) {
 
                             // Get messages for conversation button that was clicked
                             ArrayList<Message> conversationMessages = conversation.getMessages();
@@ -106,12 +111,15 @@ public class ConversationsGUI extends JComponent implements Runnable {
                             // Create new frame for messages
                             messagesFrame = new JFrame();
                             Container messageContent = messagesFrame.getContentPane();
+                            messageContent.setLayout(new BorderLayout());
+                            messagesFrame.setSize(400, 600);
+                            messagesFrame.setLocationRelativeTo(null);
+                            messagesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
                             // scroll panel for messages
                             JPanel messagesScrollPanel = new JPanel();
-                            JScrollPane messagesJSP = new JScrollPane(messagesScrollPanel);
-                            messagesJSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-                            messagesJSP.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                            messagesScrollPanel.setLayout(new BoxLayout(messagesScrollPanel, BoxLayout.PAGE_AXIS));
+
 
                             if (conversationMessages != null) {
                                 for (Message message : conversationMessages) {
@@ -137,11 +145,18 @@ public class ConversationsGUI extends JComponent implements Runnable {
                                     JPanel textAndButtonPanel = new JPanel();
                                     textAndButtonPanel.add(messageTextField);
                                     textAndButtonPanel.add(messageButton);
-                                    messagesJSP.add(textAndButtonPanel);
-                                    messageContent.add(messagesJSP);
+                                    messagesScrollPanel.add(textAndButtonPanel);
 
                                 }
                             }
+
+                            // make frame visible
+                            JScrollPane messagesJSP = new JScrollPane(messagesScrollPanel,
+                                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                            JLabel messagesTitle = new JLabel(usersString + "Messages");
+                            messageContent.add(messagesTitle, BorderLayout.NORTH);
+                            messageContent.add(messagesJSP, BorderLayout.CENTER);
+                            messagesFrame.setVisible(true);
                         }
                     }
                 });
@@ -149,8 +164,10 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 // Create inner panel and add to scrollable panel
                 JPanel labelAndButtonPanel = new JPanel();
                 labelAndButtonPanel.add(conversationsLabel);
-                labelAndButtonPanel.add(conversationButton);
+                labelAndButtonPanel.add(selectButtons[count]);
                 scrollPanel.add(labelAndButtonPanel);
+
+                count++;
             }
         } else {
             JLabel label = new JLabel("No conversations");
