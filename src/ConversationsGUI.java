@@ -74,17 +74,21 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
         // Display conversations
         JPanel scrollPanel = new JPanel();
+        scrollPanel.setLayout(new BoxLayout(scrollPanel, BoxLayout.PAGE_AXIS));
 
         if (usersConversations != null) {
+            System.out.println(usersConversations);
             for (Conversation conversation : usersConversations) {
                 // each JLabel
-                ArrayList<User> users = conversation.getConvoUsers();
+                ArrayList<User> users = conversation.getConvoUsers();;
 
                 // Create string of all users usernames with space in between
                 StringBuilder usersString = new StringBuilder();
-                for (User user : users) {
-                    usersString.append(user.getUsername()).append(" ");
+                for (int i = 1; i < users.size(); i++) {
+                    usersString.append(users.get(i).getUsername()).append(" ");
+
                 }
+
                 JLabel conversationsLabel = new JLabel(String.valueOf(usersString));
 
                 // each button

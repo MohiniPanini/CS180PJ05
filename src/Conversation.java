@@ -58,6 +58,7 @@ public class Conversation {
 				}
 				while (line != null) {
 					if (!filename.equals(line)) {
+						System.out.println("filename was new");
 						writer.println(filename);
 					}
 					line = bfr.readLine();
