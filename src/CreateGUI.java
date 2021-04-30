@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  *
  * Represents the gui that allows the user to create new messages
  *
- * @author
+ * @author McKenna O'Hara, Luka Narisawa
  * @version April 19, 2021
  */
 

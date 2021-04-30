@@ -1,6 +1,15 @@
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * ConversationsGUI
+ *
+ * Represents a user object
+ *
+ * @author Mohini Roplekr
+ * @version April 19, 2021
+ */
+
 public class User {
 	//since usernames and passwords can both change, users should be searched/referred to by ID, which cannot change
 	private String username;
@@ -96,6 +105,15 @@ public class User {
 		}
 
 		return userConvos;
+	}
+
+	public static User fromString(String string) {
+		String[] components = string.split("\\|");
+		String username = components[0];
+		String password = components[1];
+		int ID = Integer.parseInt(components[2]);
+		return new User(username, password, ID);
+
 	}
 
 }
