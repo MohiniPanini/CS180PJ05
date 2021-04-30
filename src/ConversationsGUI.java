@@ -74,12 +74,8 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
         // Display conversations
         JPanel scrollPanel = new JPanel();
-        JScrollPane jsp = new JScrollPane(scrollPanel);
-        jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         if (usersConversations != null) {
-
             for (Conversation conversation : usersConversations) {
                 // each JLabel
                 ArrayList<User> users = conversation.getConvoUsers();
@@ -150,14 +146,17 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 JPanel labelAndButtonPanel = new JPanel();
                 labelAndButtonPanel.add(conversationsLabel);
                 labelAndButtonPanel.add(conversationButton);
-                jsp.add(labelAndButtonPanel);
+                scrollPanel.add(labelAndButtonPanel);
             }
+        } else {
+            JLabel label = new JLabel("No conversations");
+            scrollPanel.add(label);
         }
 
-
+        JScrollPane jsp = new JScrollPane(scrollPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         conversationsContent.add(panel1, BorderLayout.NORTH);
         conversationsContent.add(panel2, BorderLayout.CENTER);
-        conversationsContent.add(jsp, BorderLayout.SOUTH);
+        conversationsContent.add(jsp, BorderLayout.CENTER);
         conversationsFrame.setVisible(true);
     } // run
 
@@ -175,13 +174,11 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
             // for each user in the conversation
             for (User loggedIN : conversation.getConvoUsers()) {
-
                 if (loggedIN.getUsername().equals(LoginGUI.username)) {
                     userConversations.add(conversation);
                 }
             }
         }
-
         return userConversations;
 
     }
