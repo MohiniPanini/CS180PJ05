@@ -79,6 +79,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         if (usersConversations != null) {
+
             for (Conversation conversation : usersConversations) {
                 // each JLabel
                 ArrayList<User> users = conversation.getConvoUsers();
@@ -174,19 +175,12 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
             // for each user in the conversation
             for (User loggedIN : conversation.getConvoUsers()) {
-                System.out.println(loggedIN);
-                System.out.println(conversation);
 
                 if (loggedIN.getUsername().equals(LoginGUI.username)) {
-                    System.out.println("test");
-                    System.out.println(conversation);
                     userConversations.add(conversation);
                 }
             }
         }
-
-        System.out.println(Conversation.conversations.toString());
-        System.out.println(userConversations.toString());
 
         return userConversations;
 
