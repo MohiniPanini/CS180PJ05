@@ -3,6 +3,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * ConversationsGUI
+ *
+ * Represents the login GUI
+ *
+ * @author Luka Narisawa
+ * @version April 19, 2021
+ */
+
 public class LoginGUI extends JComponent implements Runnable {
     public static String username;
     private static String password;

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  * Represents the gui that allows the user to view all conversations
  *
- * @author
+ * @author Luka Narisawa, McKenna O'Hara
  * @version April 19, 2021
  */
 
@@ -82,6 +82,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
             JButton[] selectButtons = new JButton[usersConversations.size()];
             int count = 0;
             for (Conversation conversation : usersConversations) {
+                System.out.println(conversation.toString());
                 // each JLabel
                 ArrayList<User> users = conversation.getConvoUsers();;
 
@@ -154,7 +155,11 @@ public class ConversationsGUI extends JComponent implements Runnable {
                             JScrollPane messagesJSP = new JScrollPane(messagesScrollPanel,
                                     JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
                             JLabel messagesTitle = new JLabel(usersString + "Messages");
-                            messageContent.add(messagesTitle, BorderLayout.NORTH);
+                            JButton deleteConversationButton = new JButton("Delete Conversation");
+                            JPanel topPanel = new JPanel();
+                            topPanel.add(messagesTitle);
+                            topPanel.add(deleteConversationButton);
+                            messageContent.add(topPanel, BorderLayout.NORTH);
                             messageContent.add(messagesJSP, BorderLayout.CENTER);
                             messagesFrame.setVisible(true);
                         }
@@ -184,23 +189,38 @@ public class ConversationsGUI extends JComponent implements Runnable {
     // return the conversations of the currently logged in user
     public ArrayList<Conversation> usersConversations() {
         // for each conversation in application
-        ArrayList<Conversation> userConversations = new ArrayList<>();
+        ArrayList<Conversation> userConversationsCopy = new ArrayList<>();
 
-
+        usersConversations = new ArrayList<>();
         // Get all conversations in file into array
         Conversation.readAllConversations();
 
         // Determine which of the conversations are associated with currently logged in user
         for (Conversation conversation : Conversation.conversations) {
 
-            // for each user in the conversation
+
             for (User loggedIN : conversation.getConvoUsers()) {
                 if (loggedIN.getUsername().equals(LoginGUI.username)) {
-                    userConversations.add(conversation);
+                    usersConversations.add(conversation);
                 }
             }
         }
-        return userConversations;
+
+        // remove duplicates
+        /*ArrayList<String> usersConversationsString = new ArrayList<>();
+        usersConversations = new ArrayList<>();
+        for (Conversation userConversation : userConversationsCopy) {
+            if(!usersConversationsString.contains(userConversation.toString())) {
+                usersConversationsString.add(userConversation.toString());
+            }
+        }
+
+        for (String conversationString : usersConversationsString) {
+            System.out.println(conversationString);
+            usersConversations.add(Conversation.fromString(conversationString));
+        } */
+
+        return usersConversations;
 
     }
 

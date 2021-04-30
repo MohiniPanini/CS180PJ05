@@ -1,6 +1,16 @@
 import java.io.*;
 import java.nio.file.ProviderNotFoundException;
 import java.util.ArrayList;
+import java.util.Objects;
+
+/**
+ * Conversation
+ *
+ * Represents a Converation object
+ *
+ * @author Mohini Roplekar, McKenna O'Hara
+ * @version April 19, 2021
+ */
 
 public class Conversation {
 	private ArrayList<Message> messages;
@@ -117,5 +127,33 @@ public class Conversation {
 		}
 	}
 
+	public String toString() {
+		return messages.toString() + "##SEPARATIONISHERE##!"  + convoUsers.toString();
 
+	}
+
+	public static Conversation fromString(String string) {
+
+		ArrayList<Message> messageArrayList = new ArrayList<>();
+		ArrayList<User> userArrayList = new ArrayList<>();
+
+		String[] split = string.split("##SEPARATIONISHERE##!");
+		String messages = split[0];
+		String users = split[1];
+
+		String[] messagesArray = messages.split(", ");
+		for (String message : messagesArray) {
+			messageArrayList.add(Message.fromString(message));
+		}
+
+		String[] usersArray = users.split(", ");
+		for (String user : usersArray) {
+			userArrayList.add(User.fromString(user));
+		}
+
+
+
+		return new Conversation(messageArrayList, userArrayList);
+
+	}
 }
