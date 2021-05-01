@@ -170,14 +170,67 @@ public class MessageClient {
                         while (editAccountGUI.getNewUsername() == null) {
                             Thread.onSpinWait();
                         } // end while
-                        String newUsername = editAccountGUI.getNewUsername();
-                        out.write(newUsername);
-                    } else if (editAccountGUI.getAction().equals("password")) {
-                        while (editAccountGUI.getNewPassword() == null) {
-                            Thread.onSpinWait();
+                        boolean changed = false;
+                        while(!changed) {
+                            String username = JOptionPane.showInputDialog(null, "Enter username",
+                                    "Create account", JOptionPane.QUESTION_MESSAGE);
+                            if (username == null) {
+                                out.write("Go back to ConversationGUI");
+                                out.println();
+                                out.flush();
+                                break;
+                            } // end if
+                            out.write(username);
+                            out.println();
+                            out.flush();
+                            String alreadyExist = in.readLine();
+                            String invalid = null;
+                            if (alreadyExist.equals("validUsername")) {
+                                changed = true;
+                                JOptionPane.showMessageDialog(null, "Username changed",
+                                        "Change Username", JOptionPane.INFORMATION_MESSAGE);
+                            } else if (alreadyExist.equals("Invalid username")) {
+                                JOptionPane.showMessageDialog(null,
+                                        "Do not use space ( ), comma (,), or vertical bar (|)",
+                                        "Change Username", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, alreadyExist,
+                                        "Change Username", JOptionPane.ERROR_MESSAGE);
+                            } // end if
                         } // end while
-                        String newPassword = editAccountGUI.getNewPassword();
-                        out.write(newPassword);
+                    } else if (editAccountGUI.getAction().equals("password")) {
+                        String newPassword = null;
+                        boolean changed = false;
+                        while (!changed) {
+                            newPassword = JOptionPane.showInputDialog(null, "Enter new password",
+                                    "Change Password", JOptionPane.QUESTION_MESSAGE);
+                            if (newPassword == null) {
+                                out.write("Go back to ConversationGUI");
+                                out.println();
+                                out.flush();
+                                break;
+                            } else {
+                                out.write(newPassword);
+                                out.println();
+                                out.flush();
+                            }
+                            String invalid = in.readLine();
+                            if (invalid.equals("invalid char")) {
+                                JOptionPane.showMessageDialog(null,
+                                        "Do not use space ( ), comma (,), or vertical bar (|)",
+                                        "Change Password", JOptionPane.ERROR_MESSAGE);
+                            }
+                            if (invalid.equals("invalid")) {
+                                JOptionPane.showMessageDialog(null,
+                                        "Password has to be at least 8 characters including " +
+                                                "Lowercase, Uppercase, and number", "Change Password",
+                                        JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                changed = true;
+                                JOptionPane.showMessageDialog(null, "Password changed",
+                                        "Change Password", JOptionPane.INFORMATION_MESSAGE);
+                            } // end if
+                        } // end while
                     } else {
                         while (editAccountGUI.getConfirm() == -1) {
                             Thread.onSpinWait();
@@ -188,9 +241,9 @@ public class MessageClient {
                         } else if (confirm == JOptionPane.NO_OPTION) {
                             out.write("no");
                         }
+                        out.println();
+                        out.flush();
                     } // end if
-                    out.println();
-                    out.flush();
                     // end edit or delete account
                 }
                 // viewing selected conversation
