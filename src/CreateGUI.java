@@ -102,7 +102,7 @@ public class CreateGUI extends JComponent implements Runnable {
 
         // obtain array list of all users that are in the application
         ArrayList<User> usersInApplication = new ArrayList<User>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("Users.txt"))) {
             String line = reader.readLine();
             while (line != null) {
                 int firstSplit = line.indexOf("|");

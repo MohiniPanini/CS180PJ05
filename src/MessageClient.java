@@ -113,6 +113,7 @@ public class MessageClient {
             boolean quit = false;
             // go back to conversationGUI until user closes app
             while (!quit) {
+		System.out.println("Now displaying conversationsGUI");
                 // Display gui to give user conversations list
                 ConversationsGUI conversationsGUI = new ConversationsGUI();
                 User.getAllUsersFromFile();
