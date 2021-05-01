@@ -38,7 +38,7 @@ public class CreateGUI extends JComponent implements Runnable {
         return sendClicked;
     }
 
-    // Actionlistener
+    // ActionListener
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -100,23 +100,6 @@ public class CreateGUI extends JComponent implements Runnable {
         ArrayList<User> users = new ArrayList<>();
         users.add(sender);
 
-        // obtain array list of all users that are in the application
-        ArrayList<User> usersInApplication = new ArrayList<User>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("Users.txt"))) {
-            String line = reader.readLine();
-            while (line != null) {
-                int firstSplit = line.indexOf("|");
-                int secondSplit = line.lastIndexOf("|");
-                String[] parts = {line.substring(0, firstSplit), line.substring(firstSplit + 1, secondSplit),
-                        line.substring(secondSplit + 1, line.length())};
-                usersInApplication.add(new User(parts[0], parts[1], Integer.parseInt(parts[2])));
-                line = reader.readLine();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         // get usernames from text box
         int count = 0;
         String[] sendTo = null;
@@ -126,7 +109,7 @@ public class CreateGUI extends JComponent implements Runnable {
             sendTo = receivers.split(",");
 
             // Determine if the users they want to  send to have an account
-            for (User user : usersInApplication) {
+            for (User user : User.users) {
                 for (String userString : sendTo) {
                     if (user.getUsername().equals(userString)) {
                         users.add(user);
@@ -137,7 +120,7 @@ public class CreateGUI extends JComponent implements Runnable {
 
         // if there aren't multiple
         } else {
-            for (User singleUser : usersInApplication) {
+            for (User singleUser : User.users) {
                 if (receivers.equals(singleUser.getUsername())) {
                     users.add(singleUser);
                     count++;
@@ -145,31 +128,21 @@ public class CreateGUI extends JComponent implements Runnable {
             }
         }
 
-
-        // if they don't dislpay an error mesage
+        // if they don't display an error message
         if (count == 0) {
             JOptionPane.showMessageDialog(null, "Not a valid user!", "Invalid User",
                     JOptionPane.ERROR_MESSAGE);
         }
 
         // Create message object
-        User currentUser = null;
-        for (User loggedIN : usersInApplication) {
-            if (loggedIN.getUsername().equals(LoginGUI.username)) {
-                currentUser = loggedIN;
-            }
-        }
-
-        Message message = new Message(currentUser, messageBox);
+        Message message = new Message(MessageClient.getUser(), messageBox);
 
         // Create conversation object
         ArrayList<Message> messageArrayList = new ArrayList<>();
         messageArrayList.add(message);
 
-        Conversation returnedConversation = new Conversation(messageArrayList, users);
-
-        // return conversatoin
-        return returnedConversation;
+        // return conversation
+        return new Conversation(messageArrayList, users);
     } // createConversation
 
 
