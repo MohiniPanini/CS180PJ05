@@ -6,8 +6,10 @@ import java.util.List;
 import java.io.IOException;
 public class ServerThread extends Thread {
     private final Socket client;
+    private final Server server;
 
-    public ServerThread(Socket client) {
+    public ServerThread(Server server, Socket client) {
+        this.server = server;
         this.client = client;
     }
 
@@ -21,6 +23,7 @@ public class ServerThread extends Thread {
         }
     }
 
+    //Change string to GUI methods
     private void handleSocket() throws IOException, InterruptedException {
         InputStream inputStream = client.getInputStream();
         OutputStream outputStream = client.getOutputStream();

@@ -22,33 +22,11 @@ public class MessageServer {
     // runs multiple threads for clients
     public static void main(String[] args) {
         int port = 1234;
+        Server server = new Server(port);
         ServerSocket serverSocket = null;
         MessageThread messageThread = null;
-        try {
-            serverSocket = new ServerSocket(port);
-            serverSocket.setReuseAddress(true);
-            // loop for multiple clients
-            while (true) {
-                Socket client = serverSocket.accept();
-                OutputStream outputStream = client.getOutputStream();
-                ServerThread serverThread = new ServerThread(client);
-                serverThread.start();
-
-                messageThread = new MessageThread(client);
-                Thread thread = new Thread(messageThread);
-                thread.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (serverSocket != null) {
-                try {
-                    serverSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } // end try
-            } // end if
-        }// end try
+        server.start();
+        // end try
     } // main
 
     private static class MessageThread implements Runnable {
