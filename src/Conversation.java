@@ -39,9 +39,10 @@ public class Conversation {
 		return convoUsers;
 	}
 
-	public void writeToFile() {
+	public void writeToFile(String file) {
 		ArrayList<String> lines = new ArrayList<String>();
 		for (Message message : messages) {
+			System.out.println(message);
 			lines.add(message.toString());
 		}
 		String filename = "";
@@ -59,8 +60,8 @@ public class Conversation {
 			e.printStackTrace();
 		}
 
-		try (PrintWriter writer = new PrintWriter(new FileOutputStream("Conversations.txt", true))) {
-			try (BufferedReader bfr = new BufferedReader(new FileReader("Conversations.txt"))) {
+		try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, true))) {
+			try (BufferedReader bfr = new BufferedReader(new FileReader(file))) {
 				String line = bfr.readLine();
 
 				if (line == null) {
