@@ -85,6 +85,9 @@ public class MessageServer {
                         } // end while
                         if (loggedIn) {
                             out.write("loggedIn");
+                            out.println();
+                            out.flush();
+                            out.write(user.toString());
                         } else {
                             out.write("Username or Password is incorrect");
                         } // end if
@@ -194,6 +197,9 @@ public class MessageServer {
                                         PrintWriter writer = new PrintWriter(new FileOutputStream("Users.txt", true));
                                         writer.println(user.getUsername() + "|" + user.getPassword() + "|" + user.getID());
                                         writer.close();
+                                        out.write(user.toString());
+                                        out.println();
+                                        out.flush();
                                         loggedIn = true;
                                         break;
                                     } else {

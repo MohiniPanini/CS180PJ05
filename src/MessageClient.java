@@ -12,6 +12,12 @@ import java.awt.event.*;
  * @version April 17, 2021
  */
 public class MessageClient {
+    private static User user = null;
+
+    public static User getUser() {
+        return user;
+    }
+
     public static void main(String[] args) {
         // connect to server
         try (Socket socket = new Socket("localhost", 1234)) {
@@ -52,6 +58,7 @@ public class MessageClient {
                     } else {
                         JOptionPane.showMessageDialog(null, "Login successful",
                                 "Message Login", JOptionPane.INFORMATION_MESSAGE);
+                        user = User.fromString(in.readLine());
                         loggedIn = true;
                     } // end if
                 } // end login option
@@ -103,6 +110,7 @@ public class MessageClient {
                                                     "Lowercase, Uppercase, and number", "Create account",
                                             JOptionPane.ERROR_MESSAGE);
                                 } else {
+                                    user = User.fromString(in.readLine());
                                     created = true;
                                     loggedIn = true;
                                     // Give each user a hidden conversations file
@@ -145,13 +153,6 @@ public class MessageClient {
                     while (!create.isSendClicked()) {
                         Thread.onSpinWait();
                     } // end while
-                    String userString = in.readLine();
-                    int firstBar = userString.indexOf("|");
-                    int secondBar = userString.lastIndexOf("|");
-                    String username = userString.substring(0, firstBar);
-                    String password = userString.substring(firstBar + 1, secondBar);
-                    int id = Integer.parseInt(userString.substring(secondBar + 1));
-                    User user = new User(username, password, id);
                     Conversation newConversation = create.createConversation(create.getSendToTextField().getText(),
                             create.getMessageTextField().getText(), user);
                     newConversation.writeToFile("Conversations.txt");

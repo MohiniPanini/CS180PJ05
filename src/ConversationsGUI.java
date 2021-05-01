@@ -17,7 +17,6 @@ import java.util.ArrayList;
 public class ConversationsGUI extends JComponent implements Runnable {
     // Fields
     private String action;
-    private EditAccountGUI editAccountGUI;
     private JFrame conversationsFrame;
     private JButton createButton;
     private JButton editAccountButton;
@@ -30,10 +29,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
     public String getAction() {
         return action;
-    }
-
-    public EditAccountGUI getEditAccountGUI() {
-        return editAccountGUI;
     }
 
     ActionListener actionListener = new ActionListener() {
@@ -85,6 +80,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
             JButton[] selectButtons = new JButton[usersConversations.size()];
             int count = 0;
             for (Conversation conversation : usersConversations) {
+                System.out.println(conversation);
                 // each JLabel
                 ArrayList<User> users = conversation.getConvoUsers();;
 
@@ -92,39 +88,34 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 StringBuilder usersString = new StringBuilder();
                 for (int i = 1; i < users.size(); i++) {
                     usersString.append(users.get(i).getUsername()).append(" ");
-
+                    System.out.println(usersString);
                 }
+
+                StringBuilder filename = new StringBuilder();
+                for (int i = 1; i < users.size(); i++) {
+                    filename.append(users.get(i).getID()).append("|");
+                }
+                int length = filename.length();
+                filename.delete(length - 1, length);
+                filename.append(".txt");
+                System.out.println(filename);
 
                 JLabel conversationsLabel = null;
 
                 // Read through conversations and don't display any conversations that have been deleted
-                try (BufferedReader reader = new BufferedReader(new FileReader("Conversations.txt"))) {
-                    try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + LoginGUI.username + ".txt"))) {
-                        String conversationsLine = reader.readLine();
-
-                        while (conversationsLine != null) {
-                            String hiddenConversationsLine = bfr.readLine();
-                            if (!conversationsLine.equals(hiddenConversationsLine)) {
-                                // Add label and button
-                                conversationsLabel = new JLabel(String.valueOf(usersString));
-                                selectButtons[count] = new JButton("Select " + count);
-                                count++;
-                            }
-
-                            conversationsLine = reader.readLine();
-
-                        }
-
-                    } catch (IOException ie) {
-                        ie.printStackTrace();
+                try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + LoginGUI.username + ".txt"))) {
+                    String hiddenConversationsLine = bfr.readLine();
+                    if (!filename.equals(hiddenConversationsLine)) {
+                        // Add label and button
+                        conversationsLabel = new JLabel(String.valueOf(usersString));
+                        selectButtons[count++] = new JButton("Select " + count);
                     }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ie) {
+                    ie.printStackTrace();
                 }
 
                 // each button
-                int finalCount = count;
+                int finalCount = --count;
                 selectButtons[count].addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
