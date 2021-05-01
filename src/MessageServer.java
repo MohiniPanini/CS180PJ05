@@ -2,7 +2,6 @@ import java.io.*;
 import java.net.*;
 import java.util.Random;
 import java.util.ArrayList;
-import java.io.OutputStream;
 
 /**
  * MessageServer
@@ -96,20 +95,37 @@ public class MessageServer {
                     // create account
                     else if (action.equals("create")) {
                         boolean created = false;
-                        while (true) {
+                        while (!created) {
                             String username = in.readLine();
+                            if (username.equals("Go back to login")) {
+                                break;
+                            }
                             BufferedReader bfr = new BufferedReader(new FileReader("Users.txt"));
                             String line = bfr.readLine();
+                            boolean invalid = false;
                             boolean alreadyExist = false;
-                            while (line != null) {
-                                int bar = line.indexOf("|");
-                                String existUsername = line.substring(0, bar);
-                                if (existUsername.equals(username)) {
-                                    alreadyExist = true;
-                                }
-                                line = bfr.readLine();
-                            } // end while
-                            if (alreadyExist) {
+                            if (username.contains(" ")) {
+                                invalid = true;
+                            } else if (username.contains(",")) {
+                                invalid = true;
+                            } else if (username.contains("|")) {
+                                invalid = true;
+                            }
+                            if (!invalid) {
+                                while (line != null) {
+                                    int bar = line.indexOf("|");
+                                    String existUsername = line.substring(0, bar);
+                                    if (existUsername.equals(username)) {
+                                        alreadyExist = true;
+                                    }
+                                    line = bfr.readLine();
+                                } // end while
+                            } // end if
+                            if (invalid) {
+                                out.write("Invalid username");
+                                out.println();
+                                out.flush();
+                            } else if (alreadyExist) {
                                 out.write("Username already exist");
                                 out.println();
                                 out.flush();
@@ -119,10 +135,15 @@ public class MessageServer {
                                 out.flush();
                                 while (true) {
                                     String password = in.readLine();
+                                    if (password.equals("Go back to login")) {
+                                        created = true;
+                                        break;
+                                    } // end if
                                     boolean length = false;
                                     boolean digit = false;
                                     boolean Uppercase = false;
                                     boolean Lowercase = false;
+                                    boolean invalidPassword = false;
                                     if (password.length() >= 8) {
                                         length = true;
                                         for (int i = 0; i < password.length(); i++) {
@@ -133,10 +154,22 @@ public class MessageServer {
                                                 Uppercase = true;
                                             } else if (Character.isLowerCase(c)) {
                                                 Lowercase = true;
+                                            } else {
+                                                if (username.contains(" ")) {
+                                                    invalidPassword = true;
+                                                } else if (username.contains(",")) {
+                                                    invalidPassword = true;
+                                                } else if (username.contains("|")) {
+                                                    invalidPassword = true;
+                                                } // end if
                                             } // end if
                                         } // end for
                                     } // end if
-                                    if (length && digit && Uppercase && Lowercase) {
+                                    if (invalidPassword) {
+                                        out.write("invalid char");
+                                        out.println();
+                                        out.flush();
+                                    }else if (length && digit && Uppercase && Lowercase) {
                                         out.write("valid");
                                         out.println();
                                         out.flush();
@@ -169,7 +202,7 @@ public class MessageServer {
                                         out.flush();
                                     } // end if
                                 } // end while
-                                break;
+                                created = true;
                             } // end if
                         } // end while
                     } // end create account
