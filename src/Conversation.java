@@ -68,7 +68,6 @@ public class Conversation {
 				}
 				while (line != null) {
 					if (!filename.equals(line)) {
-						System.out.println("filename was new");
 						writer.println(filename);
 					}
 					line = bfr.readLine();
@@ -86,7 +85,6 @@ public class Conversation {
 
 	public static Conversation readFromFile(String filename) {
 		ArrayList<Message> messages = new ArrayList<Message>();
-
 		try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
 			String line = reader.readLine();
 			while (line != null) {
@@ -121,10 +119,12 @@ public class Conversation {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		for (String filename : filenames) {
-			conversations.add(readFromFile(filename));
+		if (filenames != null) {
+			for (String filename : filenames) {
+				conversations.add(readFromFile(filename));
+			}
 		}
+
 	}
 
 	public String toString() {

@@ -77,12 +77,10 @@ public class ConversationsGUI extends JComponent implements Runnable {
         scrollPanel.setLayout(new BoxLayout(scrollPanel, BoxLayout.PAGE_AXIS));
 
         if (usersConversations != null) {
-            System.out.println(usersConversations);
             // Array for select buttons
             JButton[] selectButtons = new JButton[usersConversations.size()];
             int count = 0;
             for (Conversation conversation : usersConversations) {
-                System.out.println(conversation.toString());
                 // each JLabel
                 ArrayList<User> users = conversation.getConvoUsers();;
 
