@@ -155,11 +155,11 @@ public class MessageServer {
                                             } else if (Character.isLowerCase(c)) {
                                                 Lowercase = true;
                                             } else {
-                                                if (username.contains(" ")) {
+                                                if (password.contains(" ")) {
                                                     invalidPassword = true;
-                                                } else if (username.contains(",")) {
+                                                } else if (password.contains(",")) {
                                                     invalidPassword = true;
-                                                } else if (username.contains("|")) {
+                                                } else if (password.contains("|")) {
                                                     invalidPassword = true;
                                                 } // end if
                                             } // end if
@@ -222,13 +222,99 @@ public class MessageServer {
                     } else if (conversationAction.equals("edit")) {
                         String editAction = in.readLine();
                         if (editAction.equals("username")) {
-                            String username = in.readLine();
-                            user.setUsername(username);
-                            User.writeAllUsersToFile();
+                            boolean changed = false;
+                            while (!changed) {
+                                String username = in.readLine();
+                                if (username.equals("Go back to ConversationGUI")) {
+                                    break;
+                                }
+                                BufferedReader bfr = new BufferedReader(new FileReader("Users.txt"));
+                                String line = bfr.readLine();
+                                boolean invalid = false;
+                                boolean alreadyExist = false;
+                                if (username.contains(" ")) {
+                                    invalid = true;
+                                } else if (username.contains(",")) {
+                                    invalid = true;
+                                } else if (username.contains("|")) {
+                                    invalid = true;
+                                }
+                                if (!invalid) {
+                                    while (line != null) {
+                                        int bar = line.indexOf("|");
+                                        String existUsername = line.substring(0, bar);
+                                        if (existUsername.equals(username)) {
+                                            alreadyExist = true;
+                                        }
+                                        line = bfr.readLine();
+                                    } // end while
+                                } // end if
+                                if (invalid) {
+                                    out.write("Invalid username");
+                                    out.println();
+                                    out.flush();
+                                } else if (alreadyExist) {
+                                    out.write("Username already exist");
+                                    out.println();
+                                    out.flush();
+                                } else {
+                                    changed = true;
+                                    user.setUsername(username);
+                                    User.writeAllUsersToFile();
+                                    out.write("validUsername");
+                                    out.println();
+                                    out.flush();
+                                } // end if
+                            } // end while
                         } else if (editAction.equals("password")) {
-                            String password = in.readLine();
-                            user.setUsername(password);
-                            User.writeAllUsersToFile();
+                            while (true) {
+                                String password = in.readLine();
+                                if (password.equals("Go back to login")) {
+                                    break;
+                                } // end if
+                                boolean length = false;
+                                boolean digit = false;
+                                boolean Uppercase = false;
+                                boolean Lowercase = false;
+                                boolean invalidPassword = false;
+                                if (password.length() >= 8) {
+                                    length = true;
+                                    for (int i = 0; i < password.length(); i++) {
+                                        char c = password.charAt(i);
+                                        if (Character.isDigit(c)) {
+                                            digit = true;
+                                        } else if (Character.isUpperCase(c)) {
+                                            Uppercase = true;
+                                        } else if (Character.isLowerCase(c)) {
+                                            Lowercase = true;
+                                        } else {
+                                            if (password.contains(" ")) {
+                                                invalidPassword = true;
+                                            } else if (password.contains(",")) {
+                                                invalidPassword = true;
+                                            } else if (password.contains("|")) {
+                                                invalidPassword = true;
+                                            } // end if
+                                        } // end if
+                                    } // end for
+                                } // end if
+                                if (invalidPassword) {
+                                    out.write("invalid char");
+                                    out.println();
+                                    out.flush();
+                                }else if (length && digit && Uppercase && Lowercase) {
+                                    user.setUsername(password);
+                                    User.writeAllUsersToFile();
+                                    out.write("valid");
+                                    out.println();
+                                    out.flush();
+                                    break;
+                                } else {
+                                    out.write("invalid");
+                                    out.println();
+                                    out.flush();
+                                } // end if
+                            } // end while
                         } else {
                             String confirm = in.readLine();
                             if (confirm.equals("yes")) {

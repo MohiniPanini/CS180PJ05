@@ -48,16 +48,12 @@ public class EditAccountGUI extends JComponent implements Runnable {
             if (e.getSource() == editUsernameButton) {
                 frame.dispose();
                 action = "username";
-                newUsername = JOptionPane.showInputDialog(null, "Enter new username",
-                        "Change Username", JOptionPane.QUESTION_MESSAGE);
             } // end if
 
             // if user wants to change password
             if (e.getSource() == editPasswordButton) {
                 frame.dispose();
                 action = "password";
-                newPassword = JOptionPane.showInputDialog(null, "Enter new password",
-                        "Change Password", JOptionPane.QUESTION_MESSAGE);
             } // end if
 
             // if user wants to delete account
