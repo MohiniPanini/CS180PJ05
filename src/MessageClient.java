@@ -98,6 +98,8 @@ public class MessageClient {
                                 } // end while
                                 created = true;
                                 loggedIn = true;
+                                // Give each user a hidden conversations file
+                                new File("Hiddenconvos|" + loginGUI.getUsername());
                                 JOptionPane.showMessageDialog(null,
                                         "Account created successfully", "Create account",
                                         JOptionPane.INFORMATION_MESSAGE);
@@ -139,7 +141,7 @@ public class MessageClient {
                     User user = new User(username, password, id);
                     Conversation newConversation = create.createConversation(create.getSendToTextField().getText(),
                             create.getMessageTextField().getText(), user);
-                    newConversation.writeToFile();
+                    newConversation.writeToFile("Conversations.txt");
                 }
                 // edit or delete account
                 else if (conversationsGUI.getAction().equals("edit")) {
