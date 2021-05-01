@@ -80,7 +80,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
             JButton[] selectButtons = new JButton[usersConversations.size()];
             int count = 0;
             for (Conversation conversation : usersConversations) {
-                System.out.println(conversation);
                 // each JLabel
                 ArrayList<User> users = conversation.getConvoUsers();;
 
@@ -88,7 +87,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 StringBuilder usersString = new StringBuilder();
                 for (int i = 1; i < users.size(); i++) {
                     usersString.append(users.get(i).getUsername()).append(" ");
-                    System.out.println(usersString);
                 }
 
                 StringBuilder filename = new StringBuilder();
@@ -98,7 +96,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 int length = filename.length();
                 filename.delete(length - 1, length);
                 filename.append(".txt");
-                System.out.println(filename);
 
                 JLabel conversationsLabel = null;
 
