@@ -1,6 +1,14 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * Message
+ *
+ * Represents a Message Object
+ *
+ * @author Mohini Roplekar, McKenna O'Hara
+ * @version April 19, 2021
+ */
 
 public class Message {
 	private final User user;

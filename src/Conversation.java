@@ -6,7 +6,7 @@ import java.util.Objects;
 /**
  * Conversation
  *
- * Represents a Converation object
+ * Represents a Conversation object
  *
  * @author Mohini Roplekar, McKenna O'Hara
  * @version April 19, 2021

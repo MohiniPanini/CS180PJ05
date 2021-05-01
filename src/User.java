@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * ConversationsGUI
+ * User
  *
  * Represents a user object
  *
