@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * ConversationsGUI
+ * LoginGUI
  *
  * Represents the login GUI
  *
