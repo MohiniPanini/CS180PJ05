@@ -42,9 +42,9 @@ public class MessageServer {
         public void run() {
             try {
                 // get output
-                out = new PrintWriter(clientSocket.getOutputStream(), true);
+                out = new PrintWriter(this.clientSocket.getOutputStream(), true);
                 // get input
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                in = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
                 boolean loggedIn = false;
                 User user = null;
 

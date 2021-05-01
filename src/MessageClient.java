@@ -43,6 +43,9 @@ public class MessageClient {
                     out.println();
                     out.flush();
                     String loggedin = in.readLine();
+		    while (loggedin == null) {
+			loggedin = in.readLine();
+		    }
                     if (!loggedin.equals("loggedIn")) {
                         JOptionPane.showMessageDialog(null, loggedin,
                                 "Message Login", JOptionPane.ERROR_MESSAGE);

@@ -9,12 +9,18 @@ public class ServerThread extends Thread {
     private final Server server;
     private BufferedReader in;
     private PrintWriter out;
-    InputStream inputStream = client.getInputStream();
-    OutputStream outputStream = client.getOutputStream();
+    InputStream inputStream;
+    OutputStream outputStream;
 
-    public ServerThread(Server server, Socket client) {
+    public ServerThread(Server server, Socket client) throws IOException {
         this.server = server;
         this.client = client;
+	try {
+		this.inputStream = client.getInputStream();
+		this.outputStream = client.getOutputStream();
+	} catch (IOException e) {
+		throw e;
+	}
     }
 
     public void run() {
@@ -43,14 +49,20 @@ public class ServerThread extends Thread {
 
     //DM Handling
     private void handleMessage() throws IOException {
-        // get output
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        // get input
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        String action = in.readLine();
+	try {
+       		 // get output
+       		 out = new PrintWriter(client.getOutputStream(), true);
+       		 // get input
+	        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+	      	  String action = in.readLine();
+	
+		/* what is this supposed to be? i can't figure it out
+       		 if (isSendClicked() == true) {
 
-        if (isSendClicked() == true) {
-
-        }
+		}
+		*/
+	} catch (IOException e) {
+		throw e;
+	}
     }
 }
