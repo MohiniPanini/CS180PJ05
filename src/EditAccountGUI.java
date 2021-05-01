@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 /**
  * DeleteAccountGUI
@@ -14,9 +13,6 @@ import java.awt.event.ActionListener;
 
 public class EditAccountGUI extends JComponent implements Runnable {
     private String action;
-    private String newUsername;
-    private String newPassword;
-    private int confirm = -1;
 
     // JFrame Fields
     private JFrame frame;
@@ -26,18 +22,6 @@ public class EditAccountGUI extends JComponent implements Runnable {
 
     public String getAction() {
         return action;
-    }
-
-    public String getNewUsername() {
-        return newUsername;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public int getConfirm() {
-        return confirm;
     }
 
     // actionListener
@@ -60,14 +44,20 @@ public class EditAccountGUI extends JComponent implements Runnable {
             if (e.getSource() == deleteButton) {
                 frame.dispose();
                 action = "delete";
-                confirm = JOptionPane.showConfirmDialog(null, "Enter new password",
-                        "Delete account", JOptionPane.YES_NO_OPTION);
             } // end if
         }
     }; // actionListener
 
+    WindowListener windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent evt) {
+            action = "closed";
+        }
+    };
+
     public void run() {
         frame = new JFrame("Edit Account"); // JFrame
+        frame.addWindowListener(windowListener);
         Container content = frame.getContentPane(); // Container for panels
         content.setLayout(new BorderLayout()); // Set layout to border
         frame.setSize(300, 200); // size

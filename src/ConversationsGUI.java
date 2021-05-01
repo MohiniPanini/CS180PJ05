@@ -100,7 +100,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 JLabel conversationsLabel = null;
 
                 // Read through conversations and don't display any conversations that have been deleted
-                try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + LoginGUI.username + ".txt"))) {
+                try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + MessageClient.getUser().getID() + ".txt"))) {
                     String hiddenConversationsLine = bfr.readLine();
                     if (!filename.equals(hiddenConversationsLine)) {
                         // Add label and button
@@ -255,7 +255,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
     public static void writeToHiddenConversationFile(Conversation conversation) {
 
         // Create hidden conversation file // format of Hiddenconvos|username
-        String filename = "Hiddenconvos|" + LoginGUI.username + ".txt";
+        String filename = "Hiddenconvos|" + MessageClient.getUser().getID() + ".txt";
         conversation.writeToFile(filename);
     }
 
