@@ -7,6 +7,10 @@ import java.io.IOException;
 public class ServerThread extends Thread {
     private final Socket client;
     private final Server server;
+    private BufferedReader in;
+    private PrintWriter out;
+    InputStream inputStream = client.getInputStream();
+    OutputStream outputStream = client.getOutputStream();
 
     public ServerThread(Server server, Socket client) {
         this.server = server;
@@ -23,11 +27,8 @@ public class ServerThread extends Thread {
         }
     }
 
-    //Change string to GUI methods
+    //Change string vars to GUI methods
     private void handleSocket() throws IOException, InterruptedException {
-        InputStream inputStream = client.getInputStream();
-        OutputStream outputStream = client.getOutputStream();
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
         while ((line = reader.readLine()) != null) {
@@ -38,5 +39,18 @@ public class ServerThread extends Thread {
             outputStream.write(msg.getBytes());
         }
         client.close();
+    }
+
+    //DM Handling
+    private void handleMessage() throws IOException {
+        // get output
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+        // get input
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        String action = in.readLine();
+
+        if (isSendClicked() == true) {
+
+        }
     }
 }

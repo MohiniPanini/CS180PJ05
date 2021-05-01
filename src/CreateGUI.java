@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @version April 19, 2021
  */
 
-public class CreateGUI extends  JComponent implements Runnable {
+public class CreateGUI extends JComponent implements Runnable {
 
     // Fields
     private JFrame createFrame;
@@ -96,8 +96,6 @@ public class CreateGUI extends  JComponent implements Runnable {
 
     // Creates conversation object when send button is clicked
     public Conversation createConversation(String receivers, String messageBox, User sender) {
-
-
         // Create array list of users
         ArrayList<User> users = new ArrayList<>();
         users.add(sender);

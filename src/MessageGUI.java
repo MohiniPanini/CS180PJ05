@@ -20,6 +20,7 @@ public class MessageGUI extends JComponent implements Runnable {
     private JButton editButton;
     private JButton deleteButton;
     private JButton conversationsButton;
+    private static String action;
 
     // actionlistener
     ActionListener actionListener = new ActionListener() {
@@ -30,6 +31,7 @@ public class MessageGUI extends JComponent implements Runnable {
                 frame.setVisible(false);
                 CreateGUI create = new CreateGUI();
                 SwingUtilities.invokeLater(create);
+                action = "create message";
 
             } // end if
 
@@ -38,6 +40,7 @@ public class MessageGUI extends JComponent implements Runnable {
                 frame.setVisible(false);
                 EditMessageGUI edit = new EditMessageGUI();
                 SwingUtilities.invokeLater(edit);
+                action = "edit message";
             } // end if
 
             // if user wants to delete message
@@ -45,6 +48,7 @@ public class MessageGUI extends JComponent implements Runnable {
                 frame.setVisible(false);
                 DeleteMessageGUI delete = new DeleteMessageGUI();
                 SwingUtilities.invokeLater(delete);
+                action = "delete message";
             } // end if
 
             // if user wants to view conversations
@@ -52,6 +56,7 @@ public class MessageGUI extends JComponent implements Runnable {
                 frame.setVisible(false);
                 ConversationsGUI conversations = new ConversationsGUI();
                 SwingUtilities.invokeLater(conversations);
+                action = "view conversations";
             } // end if
         }
     }; // actionListener

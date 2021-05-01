@@ -38,7 +38,6 @@ public class MessageServer {
             this.clientSocket = clientSocket;
         }
 
-
         // run method for server actions
         public void run() {
             try {
