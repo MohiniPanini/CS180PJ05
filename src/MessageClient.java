@@ -60,53 +60,65 @@ public class MessageClient {
                 else if (loginGUI.getAction().equals("create")) {
                     boolean created = false;
                     while(!created) {
-                        String username = null;
                         String password = null;
-                        while (created == false && (username == null || username.equals(""))) {
-                            username = JOptionPane.showInputDialog(null, "Enter username",
-                                    "Create account", JOptionPane.QUESTION_MESSAGE);
-                            if (username == null) {
-                                created = true;
-                            } // end if
-                        } // end while
-                        if (!created) {
-                            out.write(username);
+                        String username = JOptionPane.showInputDialog(null, "Enter username",
+                                "Create account", JOptionPane.QUESTION_MESSAGE);
+                        if (username == null) {
+                            out.write("Go back to login");
                             out.println();
                             out.flush();
-                            String alreadyExist = in.readLine();
-                            String invalid = null;
-                            if (alreadyExist.equals("validUsername")) {
-                                while (!created && (password == null || password.equals("") ||
-                                        invalid.equals("invalid"))) {
-                                    password = JOptionPane.showInputDialog(null,
-                                            "Enter password", "Create account",
-                                            JOptionPane.QUESTION_MESSAGE);
-                                    if (password == null) {
-                                        created = true;
-                                    } else {
-                                        out.write(password);
-                                        out.println();
-                                        out.flush();
-                                    }
-                                    invalid = in.readLine();
-                                    if (invalid.equals("invalid")) {
-                                        JOptionPane.showMessageDialog(null,
-                                                "Password has to be at least 8 characters including " +
-                                                        "Lowercase, Uppercase, and number", "Create account",
-                                                JOptionPane.ERROR_MESSAGE);
-                                    } // end if
-                                } // end while
-                                created = true;
-                                loggedIn = true;
-                                // Give each user a hidden conversations file
-                                new File("Hiddenconvos|" + loginGUI.getUsername());
-                                JOptionPane.showMessageDialog(null,
-                                        "Account created successfully", "Create account",
-                                        JOptionPane.INFORMATION_MESSAGE);
-                            } else {
-                                JOptionPane.showMessageDialog(null, alreadyExist,
-                                        "Create account", JOptionPane.ERROR_MESSAGE);
-                            } // end if
+                            break;
+                        } // end if
+                        out.write(username);
+                        out.println();
+                        out.flush();
+                        String alreadyExist = in.readLine();
+                        String invalid = null;
+                        if (alreadyExist.equals("validUsername")) {
+                            while (password == null || password.equals("") ||
+                                    invalid.equals("invalid")) {
+                                password = JOptionPane.showInputDialog(null,
+                                        "Enter password", "Create account",
+                                        JOptionPane.QUESTION_MESSAGE);
+                                if (password == null) {
+                                    created = true;
+                                    out.write("Go back to login");
+                                    out.println();
+                                    out.flush();
+                                    break;
+                                } else {
+                                    out.write(password);
+                                    out.println();
+                                    out.flush();
+                                }
+                                invalid = in.readLine();
+                                if (invalid.equals("invalid char")) {
+                                    JOptionPane.showMessageDialog(null,
+                                            "Do not use space ( ), comma (,), or vertical bar (|)", "Create account",
+                                            JOptionPane.ERROR_MESSAGE);
+                                }
+                                if (invalid.equals("invalid")) {
+                                    JOptionPane.showMessageDialog(null,
+                                            "Password has to be at least 8 characters including " +
+                                                    "Lowercase, Uppercase, and number", "Create account",
+                                            JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    created = true;
+                                    loggedIn = true;
+                                    // Give each user a hidden conversations file
+                                    new File("Hiddenconvos|" + loginGUI.getUsername());
+                                    JOptionPane.showMessageDialog(null,
+                                            "Account created successfully", "Create account",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                                } // end if
+                            } // end while
+                        } else if (alreadyExist.equals("Invalid username")) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Do not use space ( ), comma (,), or vertical bar (|)", "Create account",
+                                    JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(null, alreadyExist,
+                                    "Create account", JOptionPane.ERROR_MESSAGE);
                         } // end if
                     } // end while
                 } // create account complete
@@ -115,7 +127,7 @@ public class MessageClient {
             boolean quit = false;
             // go back to conversationGUI until user closes app
             while (!quit) {
-		System.out.println("Now displaying conversationsGUI");
+		        System.out.println("Now displaying conversationsGUI");
                 // Display gui to give user conversations list
                 ConversationsGUI conversationsGUI = new ConversationsGUI();
                 User.getAllUsersFromFile();
