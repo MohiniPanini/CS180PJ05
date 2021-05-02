@@ -111,7 +111,9 @@ public class Conversation {
 		try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
 			String line = reader.readLine();
 			while (line != null) {
-				messages.add(Message.fromString(line));
+				if (Message.fromString(line) != null) {
+					messages.add(Message.fromString(line));
+				}
 				line = reader.readLine();
 			}
 			int period = filename.indexOf(".");
@@ -125,7 +127,6 @@ public class Conversation {
 			return new Conversation(messages, convoUsers);
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -144,9 +145,10 @@ public class Conversation {
 		}
 		conversations.clear();
 		for (String filename : filenames) {
-			conversations.add(readFromFile(filename));
+			if (readFromFile(filename) != null) {
+				conversations.add(readFromFile(filename));
+			}
 		}
-
 	}
 
 	public String toString() {

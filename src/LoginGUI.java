@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 /**
  * LoginGUI
@@ -60,6 +59,13 @@ public class LoginGUI extends JComponent implements Runnable {
         }
     };
 
+    WindowListener windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent evt) {
+            action = "closed";
+        }
+    };
+
     public void run() {
         loginFrame = new JFrame("Message Login");
         Container content = loginFrame.getContentPane();
@@ -67,6 +73,7 @@ public class LoginGUI extends JComponent implements Runnable {
         loginFrame.setSize(400, 200);
         loginFrame.setLocationRelativeTo(null);
         loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        loginFrame.addWindowListener(windowListener);
         // username, password, login button on the CENTER
         JLabel labelU = new JLabel("Username");
         JLabel labelP = new JLabel("Password");
@@ -99,6 +106,7 @@ public class LoginGUI extends JComponent implements Runnable {
         panel4.add(create);
         panel4.add(createAccountButton);
         content.add(panel4, BorderLayout.SOUTH);
+        loginFrame.getRootPane().setDefaultButton(loginButton);
         loginFrame.setVisible(true);
     }
 }

@@ -59,7 +59,6 @@ public class Message {
 			LocalDateTime time = LocalDateTime.parse(parts[2]);
 			return new Message(user, parts[1].replaceAll("THEREWASACOMMAHERE###", ","), time);
 		} catch (UserNotFoundException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
