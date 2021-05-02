@@ -61,7 +61,7 @@ public class Conversation {
 			lines.add(message.toString());
 		}
 
-		try (PrintWriter writer = new PrintWriter(new FileOutputStream(filename, true))) {
+		try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, true))) {
 			for (String line : lines) {
 				writer.println(line);
 			}

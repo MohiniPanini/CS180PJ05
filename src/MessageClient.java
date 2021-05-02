@@ -251,7 +251,7 @@ public class MessageClient {
                         }
                         if (messageGUI.getAction().equals("import")) {
                             System.out.println("import");
-                        } else if (messageGUI.getAction().equals("closed")) {
+                        } else if (messageGUI.getAction().equals("delete") || messageGUI.getAction().equals("closed")) {
                             break;
                         }
                     }
