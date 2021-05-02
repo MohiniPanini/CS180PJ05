@@ -1,6 +1,7 @@
 import java.io.*;
 import java.nio.file.ProviderNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -15,20 +16,31 @@ import java.util.Objects;
 public class Conversation {
 	private ArrayList<Message> messages;
 	private final ArrayList<User> convoUsers;
-	// static varibale of all conversations
+	private final String filename;
+	// static variable of all conversations
 	public static ArrayList<Conversation> conversations = new ArrayList<Conversation>();
 
 	public Conversation(ArrayList<Message> messages, User ...users) {
 		this.messages = messages;
 		this.convoUsers = new ArrayList<User>();
-		for (User user : users) {
-			convoUsers.add(user);
+		convoUsers.addAll(Arrays.asList(users));
+		String filename = "";
+		for (User user : convoUsers) {
+			filename = filename + user.getID() + "|";
 		}
+		filename = filename.substring(0, filename.length() - 1) + ".txt";
+		this.filename = filename;
 	}
 
 	public Conversation(ArrayList<Message> messages, ArrayList<User> convoUsers) {
 		this.messages = messages;
 		this.convoUsers = convoUsers;
+		String filename = "";
+		for (User user : convoUsers) {
+			filename = filename + user.getID() + "|";
+		}
+		filename = filename.substring(0, filename.length() - 1) + ".txt";
+		this.filename = filename;
 	}
 
 	public ArrayList<Message> getMessages() {
@@ -39,16 +51,15 @@ public class Conversation {
 		return convoUsers;
 	}
 
+	public String getFilename() {
+		return filename;
+	}
+
 	public void writeToFile(String file) {
 		ArrayList<String> lines = new ArrayList<String>();
 		for (Message message : messages) {
 			lines.add(message.toString());
 		}
-		String filename = "";
-		for (User user : convoUsers) {
-			filename = filename + user.getID() + "|";
-		}
-		filename = filename.substring(0, filename.length() - 1) + ".txt";
 
 		try (PrintWriter writer = new PrintWriter(new FileOutputStream(filename, true))) {
 			for (String line : lines) {

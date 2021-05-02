@@ -135,7 +135,7 @@ public class MessageClient {
                 // Display gui to give user conversations list
                 ConversationsGUI conversationsGUI = new ConversationsGUI();
                 User.getAllUsersFromFile();
-                ConversationsGUI.usersConversations = conversationsGUI.usersConversations();
+                conversationsGUI.usersConversations = conversationsGUI.usersConversations();
                 SwingUtilities.invokeLater(conversationsGUI);
                 while (conversationsGUI.getAction() == null) {
                     Thread.onSpinWait();
@@ -242,9 +242,19 @@ public class MessageClient {
                     // end edit or delete account
                 }
                 // viewing selected conversation
-                else {
-                    MessageGUI messageGUI = new MessageGUI();
-                    SwingUtilities.invokeLater(messageGUI);
+                else if (conversationsGUI.getAction().equals("view")) {
+                    while (true) {
+                        MessageGUI messageGUI = new MessageGUI(conversationsGUI.getSelected());
+                        SwingUtilities.invokeLater(messageGUI);
+                        while (messageGUI.getAction() == null) {
+                            Thread.onSpinWait();
+                        }
+                        if (messageGUI.getAction().equals("import")) {
+                            System.out.println("import");
+                        } else if (messageGUI.getAction().equals("closed")) {
+                            break;
+                        }
+                    }
                 }
             }
         }
