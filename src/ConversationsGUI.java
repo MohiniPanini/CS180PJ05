@@ -52,7 +52,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
         conversationsFrame = new JFrame("Conversations");
         Container conversationsContent = conversationsFrame.getContentPane();
         conversationsContent.setLayout(new BorderLayout());
-        conversationsFrame.setSize(600, 600);
+        conversationsFrame.setSize(500, 600);
         conversationsFrame.setLocationRelativeTo(null);
         conversationsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -67,36 +67,30 @@ public class ConversationsGUI extends JComponent implements Runnable {
         JButton importConversationButton = new JButton("Import Conversation");
         panel1.add(importConversationButton);
 
-        // conversations list
-        JLabel title = new JLabel("Your Conversations");
-        JPanel panel2 = new JPanel();
-        panel2.add(title);
-
-        // Display conversations
+        // Display conversations list
         JPanel scrollPanel = new JPanel();
         scrollPanel.setLayout(new BoxLayout(scrollPanel, BoxLayout.PAGE_AXIS));
 
-        if (usersConversations != null) {
+        if (usersConversations.size() != 0) {
+            JLabel title = new JLabel("Your Conversations");
+            title.setFont(new Font("Verdana", Font.PLAIN, 18));
+            title.setBackground(Color.GRAY);
+            title.setOpaque(true);
+            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER)) {
+                @Override
+                public Dimension getMaximumSize() {
+                    return getPreferredSize();
+                }
+            };
+            panel.setPreferredSize(new Dimension(500, 40));
+            panel.add(title);
+            scrollPanel.add(panel);
+
             // Array for select buttons
             JButton[] selectButtons = new JButton[usersConversations.size()];
             int count = 0;
-            int numberOfConversationsDisplayed = 0;
+            // each Conversation
             for (Conversation conversation : usersConversations) {
-                // each JLabel
-                ArrayList<User> users = conversation.getConvoUsers();
-
-                String filename = "";
-                for (User user : users) {
-                    filename = filename + user.getID() + "|";
-                }
-
-                filename = filename.substring(0, filename.length() - 1) + ".txt";
-
-                // Create string of all users usernames with space in between
-                StringBuilder usersString = new StringBuilder();
-                for (int i = 1; i < users.size(); i++) {
-                    usersString.append(users.get(i).getUsername()).append(" ");
-                }
 
                 JLabel conversationsLabel = null;
 
@@ -111,9 +105,14 @@ public class ConversationsGUI extends JComponent implements Runnable {
                         hiddenConversationsLine = bfr.readLine();
                     }
                     if (!deleted) {
+                        // Create string of all users usernames with space in between
+                        StringBuilder usersString = new StringBuilder();
+                        for (User user: conversation.getConvoUsers()) {
+                            if(MessageClient.getUser().getID() != user.getID()) {
+                                usersString.append(user.getUsername()).append(" ");
+                            } // end if
+                        } // end for
                         // Add label and button
-                        ++numberOfConversationsDisplayed;
-                        System.out.println(numberOfConversationsDisplayed);
                         conversationsLabel = new JLabel(String.valueOf(usersString));
                         selectButtons[count] = new JButton("Select");
                     }
@@ -133,28 +132,43 @@ public class ConversationsGUI extends JComponent implements Runnable {
                                 // Get messages for conversation button that was clicked
                                 selected = conversation;
                                 action = "view";
+                                conversationsFrame.setVisible(false);
                             }
 
                         }
                     });
 
                     // Create inner panel and add to scrollable panel
-                    JPanel labelAndButtonPanel = new JPanel();
+                    JPanel labelAndButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT)) {
+                        @Override
+                        public Dimension getMaximumSize() {
+                            return getPreferredSize();
+                        }
+                    };
+                    labelAndButtonPanel.setPreferredSize(new Dimension(500, 30));
                     labelAndButtonPanel.add(conversationsLabel);
                     labelAndButtonPanel.add(selectButtons[count]);
                     scrollPanel.add(labelAndButtonPanel);
                 }
                 count++;
-
-            }
+            } // end for
         } else {
-            System.out.println("no");
-            JLabel label = new JLabel("No conversations");
-            scrollPanel.add(label);
+            JLabel title = new JLabel("No Conversations");
+            title.setFont(new Font("Verdana", Font.PLAIN, 18));
+            title.setBackground(Color.GRAY);
+            title.setOpaque(true);
+            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER)) {
+                @Override
+                public Dimension getMaximumSize() {
+                    return getPreferredSize();
+                }
+            };
+            panel.setPreferredSize(new Dimension(500, 40));
+            panel.add(title);
+            scrollPanel.add(panel);
         }
         JScrollPane jsp = new JScrollPane(scrollPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         conversationsContent.add(panel1, BorderLayout.NORTH);
-        conversationsContent.add(panel2, BorderLayout.CENTER);
         conversationsContent.add(jsp, BorderLayout.CENTER);
         conversationsFrame.setVisible(true);
     } // run
