@@ -235,6 +235,9 @@ public class MessageClient {
                                 "Delete account", JOptionPane.YES_NO_OPTION);
                         if (confirm == JOptionPane.YES_OPTION) {
                             out.write("yes");
+                            for (Conversation conversation: conversationsGUI.usersConversations) {
+                                ConversationsGUI.writeToHiddenConversationFile(conversation);
+                            }
                         } else {
                             out.write("no");
                         }

@@ -328,7 +328,6 @@ public class MessageServer {
                                 } // end if
                             } // end while
                         } else if (editAction.equals("delete")) {
-
                             System.out.println("delete");
                             String confirm = in.readLine();
                             if (confirm.equals("yes")) {
