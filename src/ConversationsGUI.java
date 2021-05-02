@@ -100,19 +100,19 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 JLabel conversationsLabel = null;
 
                 // Read through conversations and don't display any conversations that have been deleted
-                try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + LoginGUI.username + ".txt"))) {
+                try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + MessageClient.getUser().getID() + ".txt"))) {
                     String hiddenConversationsLine = bfr.readLine();
                     if (!filename.equals(hiddenConversationsLine)) {
                         // Add label and button
                         conversationsLabel = new JLabel(String.valueOf(usersString));
-                        selectButtons[count++] = new JButton("Select " + count);
+                        selectButtons[count] = new JButton("Select ");
                     }
                 } catch (IOException ie) {
                     ie.printStackTrace();
                 }
 
                 // each button
-                int finalCount = --count;
+                int finalCount = count;
                 selectButtons[count].addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -199,7 +199,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 labelAndButtonPanel.add(conversationsLabel);
                 labelAndButtonPanel.add(selectButtons[count]);
                 scrollPanel.add(labelAndButtonPanel);
-
+                count++;
             }
         } else {
             JLabel label = new JLabel("No conversations");
@@ -221,7 +221,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
         usersConversations = new ArrayList<>();
         // Get all conversations in file into array
         Conversation.readAllConversations();
-
         // Determine which of the conversations are associated with currently logged in user
         for (Conversation conversation : Conversation.conversations) {
 
@@ -233,20 +232,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
             }
         }
 
-        // remove duplicates
-        /*ArrayList<String> usersConversationsString = new ArrayList<>();
-        usersConversations = new ArrayList<>();
-        for (Conversation userConversation : userConversationsCopy) {
-            if(!usersConversationsString.contains(userConversation.toString())) {
-                usersConversationsString.add(userConversation.toString());
-            }
-        }
-
-        for (String conversationString : usersConversationsString) {
-            System.out.println(conversationString);
-            usersConversations.add(Conversation.fromString(conversationString));
-        } */
-
         return usersConversations;
 
     }
@@ -255,7 +240,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
     public static void writeToHiddenConversationFile(Conversation conversation) {
 
         // Create hidden conversation file // format of Hiddenconvos|username
-        String filename = "Hiddenconvos|" + LoginGUI.username + ".txt";
+        String filename = "Hiddenconvos|" + MessageClient.getUser().getID() + ".txt";
         conversation.writeToFile(filename);
     }
 

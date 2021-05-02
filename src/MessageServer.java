@@ -107,7 +107,9 @@ public class MessageServer {
                             String line = bfr.readLine();
                             boolean invalid = false;
                             boolean alreadyExist = false;
-                            if (username.contains(" ")) {
+                            if (username.equals("")) {
+                                invalid = true;
+                            } else if (username.contains(" ")) {
                                 invalid = true;
                             } else if (username.contains(",")) {
                                 invalid = true;
@@ -219,17 +221,18 @@ public class MessageServer {
                 // continue until user quits
                 while (!quit) {
                     //conversation process
+
+                    System.out.println("Conversation");
                     String conversationAction = in.readLine();
                     if (conversationAction.equals("create")) {
-                        out.write(user.toString());
-                        out.println();
-                        out.flush();
-
+                        System.out.println("create");
                     } else if (conversationAction.equals("edit")) {
+                        System.out.println("edit");
                         String editAction = in.readLine();
                         if (editAction.equals("username")) {
                             boolean changed = false;
                             while (!changed) {
+                                System.out.println("username");
                                 String username = in.readLine();
                                 if (username.equals("Go back to ConversationGUI")) {
                                     break;
@@ -238,7 +241,9 @@ public class MessageServer {
                                 String line = bfr.readLine();
                                 boolean invalid = false;
                                 boolean alreadyExist = false;
-                                if (username.contains(" ")) {
+                                if (username.equals("")) {
+                                    invalid = true;
+                                } else if (username.contains(" ")) {
                                     invalid = true;
                                 } else if (username.contains(",")) {
                                     invalid = true;
@@ -274,8 +279,9 @@ public class MessageServer {
                             } // end while
                         } else if (editAction.equals("password")) {
                             while (true) {
+                                System.out.println("password");
                                 String password = in.readLine();
-                                if (password.equals("Go back to login")) {
+                                if (password.equals("Go back to ConversationGUI")) {
                                     break;
                                 } // end if
                                 boolean length = false;
@@ -321,7 +327,9 @@ public class MessageServer {
                                     out.flush();
                                 } // end if
                             } // end while
-                        } else {
+                        } else if (editAction.equals("delete")) {
+
+                            System.out.println("delete");
                             String confirm = in.readLine();
                             if (confirm.equals("yes")) {
                                 for (int i = 0; i < User.users.size(); i++) {
@@ -336,7 +344,7 @@ public class MessageServer {
                     // viewing selected conversation
                     else {
                         // viewing conversation process here
-
+                        System.out.println("Viewing conversation");
 
                     }
                 }

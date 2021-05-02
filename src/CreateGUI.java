@@ -1,11 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
-import java.lang.reflect.Array;
+import java.awt.event.*;
 import java.util.ArrayList;
-import java.time.LocalDateTime;
 
 /**
  * src.createGUI
@@ -24,7 +20,7 @@ public class CreateGUI extends JComponent implements Runnable {
     private JTextField messageTextField;
     private static JButton sendButton;
 
-    private boolean sendClicked;
+    private String sendClicked;
 
     public JTextField getSendToTextField() {
         return sendToTextField;
@@ -34,7 +30,7 @@ public class CreateGUI extends JComponent implements Runnable {
         return messageTextField;
     }
 
-    public boolean isSendClicked() {
+    public String getSendClicked() {
         return sendClicked;
     }
 
@@ -42,14 +38,19 @@ public class CreateGUI extends JComponent implements Runnable {
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-
-
             if (e.getSource() == sendButton) {
                 // Create conversation object with info and write to conversations file
-                sendClicked = true;
+                sendClicked = "true";
 
                 createFrame.setVisible(false);
             }
+        }
+    };
+
+    WindowListener windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent evt) {
+            sendClicked = "false";
         }
     };
 
@@ -57,6 +58,7 @@ public class CreateGUI extends JComponent implements Runnable {
 
         // frame, container for when create is clicked
         createFrame = new JFrame("New Message");
+        createFrame.addWindowListener(windowListener);
         Container createContent = createFrame.getContentPane();
         createContent.setLayout(new BorderLayout());
         createFrame.setSize(600, 400); // size

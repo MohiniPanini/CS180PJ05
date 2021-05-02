@@ -9,7 +9,7 @@ import java.awt.event.*;
  * Client for the Messaging app.
  *
  * @author Luka Narisawa,
- * @version April 17, 2021
+ * @version May 1, 2021
  */
 public class MessageClient {
     private static User user = null;
@@ -26,9 +26,6 @@ public class MessageClient {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             // reading from server
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-
-
 
             // Log in GUI
             // login with username and password, or select "Create account" or "Edit or delete account"
@@ -114,7 +111,7 @@ public class MessageClient {
                                     created = true;
                                     loggedIn = true;
                                     // Give each user a hidden conversations file
-                                    new File("Hiddenconvos|" + loginGUI.getUsername());
+                                    new FileOutputStream("Hiddenconvos|" + user.getID() + ".txt");
                                     JOptionPane.showMessageDialog(null,
                                             "Account created successfully", "Create account",
                                             JOptionPane.INFORMATION_MESSAGE);
@@ -135,7 +132,6 @@ public class MessageClient {
             boolean quit = false;
             // go back to conversationGUI until user closes app
             while (!quit) {
-		        System.out.println("Now displaying conversationsGUI");
                 // Display gui to give user conversations list
                 ConversationsGUI conversationsGUI = new ConversationsGUI();
                 User.getAllUsersFromFile();
@@ -150,12 +146,14 @@ public class MessageClient {
                 if (conversationsGUI.getAction().equals("create")) {
                     CreateGUI create = new CreateGUI();
                     SwingUtilities.invokeLater(create);
-                    while (!create.isSendClicked()) {
+                    while (create.getSendClicked() == null) {
                         Thread.onSpinWait();
                     } // end while
-                    Conversation newConversation = create.createConversation(create.getSendToTextField().getText(),
-                            create.getMessageTextField().getText(), user);
-                    newConversation.writeToFile("Conversations.txt");
+                    if (create.getSendClicked().equals("true")) {
+                        Conversation newConversation = create.createConversation(create.getSendToTextField().getText(),
+                                create.getMessageTextField().getText(), user);
+                        newConversation.writeToFile("Conversations.txt");
+                    }
                 }
                 // edit or delete account
                 else if (conversationsGUI.getAction().equals("edit")) {
@@ -168,9 +166,6 @@ public class MessageClient {
                     out.println();
                     out.flush();
                     if (editAccountGUI.getAction().equals("username")) {
-                        while (editAccountGUI.getNewUsername() == null) {
-                            Thread.onSpinWait();
-                        } // end while
                         boolean changed = false;
                         while(!changed) {
                             String username = JOptionPane.showInputDialog(null, "Enter username",
@@ -200,9 +195,9 @@ public class MessageClient {
                             } // end if
                         } // end while
                     } else if (editAccountGUI.getAction().equals("password")) {
-                        String newPassword = null;
                         boolean changed = false;
                         while (!changed) {
+                            String newPassword = null;
                             newPassword = JOptionPane.showInputDialog(null, "Enter new password",
                                     "Change Password", JOptionPane.QUESTION_MESSAGE);
                             if (newPassword == null) {
@@ -216,6 +211,7 @@ public class MessageClient {
                                 out.flush();
                             }
                             String invalid = in.readLine();
+
                             if (invalid.equals("invalid char")) {
                                 JOptionPane.showMessageDialog(null,
                                         "Do not use space ( ), comma (,), or vertical bar (|)",
@@ -232,14 +228,12 @@ public class MessageClient {
                                         "Change Password", JOptionPane.INFORMATION_MESSAGE);
                             } // end if
                         } // end while
-                    } else {
-                        while (editAccountGUI.getConfirm() == -1) {
-                            Thread.onSpinWait();
-                        } // end while
-                        int confirm = editAccountGUI.getConfirm();
+                    } else if (editAccountGUI.getAction().equals("delete")) {
+                        int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete account?",
+                                "Delete account", JOptionPane.YES_NO_OPTION);
                         if (confirm == JOptionPane.YES_OPTION) {
                             out.write("yes");
-                        } else if (confirm == JOptionPane.NO_OPTION) {
+                        } else {
                             out.write("no");
                         }
                         out.println();
@@ -253,7 +247,6 @@ public class MessageClient {
                     SwingUtilities.invokeLater(messageGUI);
                 }
             }
-
         }
         catch (IOException e) {
             e.printStackTrace();

@@ -121,6 +121,7 @@ public class Conversation {
 			e.printStackTrace();
 		}
 		if (filenames != null) {
+			conversations.clear();
 			for (String filename : filenames) {
 				conversations.add(readFromFile(filename));
 			}
