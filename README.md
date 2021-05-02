@@ -1,6 +1,6 @@
 # CS180PJ05
 
-How to Compile:
+How to Compile: You can compile with an IDE.
 
 Submitted Report:
 Submitted Presentation:
@@ -69,6 +69,14 @@ Submitted Vocareum workspace:
   Testing:
   
   Relationships:
+  
+  // MessageGUI.java \\
+  
+  Functionality: 
+  
+  Testing: 
+  
+  Relationships:
 
 // User.java \\
 
@@ -85,3 +93,19 @@ Submitted Vocareum workspace:
   Testing:
   
   Relationships: Is thrown in the getUserById(int ID) method of the User class.
+  
+  // Server.java \\
+  
+  Functionality:
+  
+  Testing: 
+  
+  Relationships:
+  
+  // ServerThread.java \\
+  
+  Functinality:
+  
+  Testing:
+  
+  Relationships:
