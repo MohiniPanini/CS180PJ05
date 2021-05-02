@@ -103,7 +103,6 @@ public class MessageGUI extends JComponent implements Runnable {
 
             // if user clicks the their own message
             if (message.getUser().getID() == MessageClient.getUser().getID()) {
-                System.out.println("match");
                 messageButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {

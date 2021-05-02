@@ -251,17 +251,6 @@ public class MessageClient {
                                 out.println();
                                 out.flush();
                             }
-                        } else if (editAccountGUI.getAction().equals("import")) {
-                            // import conversation process here!!
-
-
-
-
-
-
-
-
-
                         }// end if
                         // end edit or delete account
                     } else if (conversationsGUI.getAction().equals("logout")) {
@@ -269,6 +258,23 @@ public class MessageClient {
                         break;
                     } else if (conversationsGUI.getAction().equals("closed")) {
                         return;
+                    } else if (conversationsGUI.getAction().equals("import")) {
+                        while (true) {
+                            String importFile = JOptionPane.showInputDialog(null,
+                                    "Enter filename to import from (Example.txt)", "Import Conversation",
+                                    JOptionPane.QUESTION_MESSAGE);
+                            if (importFile == null) {
+                                break;
+                            }
+                            Conversation imported = Conversation.importFromFile(importFile);
+                            if (imported != null) {
+                                imported.writeToFile("Conversations.txt");
+                                break;
+                            }
+                            JOptionPane.showMessageDialog(null,
+                                    "File not Found (make sure to include .txt)", "Import Conversation",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                     // viewing selected conversation
                     else if (conversationsGUI.getAction().equals("view")) {
@@ -279,9 +285,14 @@ public class MessageClient {
                                 Thread.onSpinWait();
                             }
                             if (messageGUI.getAction().equals("export")) {
-                                System.out.println("export");
+                                String newFilename = JOptionPane.showInputDialog(null,
+                                        "Enter filename for exporting conversation (Example.txt)","Export Conversation",
+                                        JOptionPane.QUESTION_MESSAGE);
+                                if (newFilename != null) {
+                                    conversationsGUI.getSelected().exportToFile(newFilename);
+                                    System.out.println("export");
+                                }
                             } else if (messageGUI.getAction().equals("delete") || messageGUI.getAction().equals("closed")) {
-                                System.out.println("closed");
                                 break;
                             }
                         }

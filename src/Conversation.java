@@ -131,6 +131,58 @@ public class Conversation {
 		}
 	}
 
+	public void exportToFile(String file) {
+		ArrayList<String> lines = new ArrayList<String>();
+		for (Message message : messages) {
+			lines.add(message.exportToString());
+		}
+
+		try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, false))) {
+			StringBuilder firstLine = new StringBuilder();
+			for (User user: convoUsers) {
+				firstLine.append(user.getID()).append(",");
+			}
+			firstLine.delete(firstLine.length() - 1, firstLine.length());
+			System.out.println(firstLine);
+			writer.println(firstLine);
+			for (String line : lines) {
+				writer.println(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static Conversation importFromFile(String filename) {
+		ArrayList<Message> messages = new ArrayList<Message>();
+		String newFile = null;
+		try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+			String users = reader.readLine();
+			if (users == null) {
+				throw new Exception();
+			}
+			String line = reader.readLine();
+			while (line != null) {
+				if (Message.importFromString(line) != null) {
+					messages.add(Message.importFromString(line));
+				}
+				line = reader.readLine();
+			}
+			String[] userIDs = users.split("\\,");
+			ArrayList<User> convoUsers = new ArrayList<>();
+			for (String ID : userIDs) {
+				convoUsers.add(User.getUserByID(Integer.parseInt(ID)));
+			}
+			newFile = users.replaceAll(",", "|");
+			Conversation newConversation = new Conversation(messages, convoUsers);
+			newConversation.writeToFile(newFile);
+			return newConversation;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public static void readAllConversations() {
 		ArrayList<String> filenames = new ArrayList<String>();
 

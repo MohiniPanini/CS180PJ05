@@ -156,7 +156,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
                                 action = "view";
                                 conversationsFrame.setVisible(false);
                             }
-
                         }
                     });
 
