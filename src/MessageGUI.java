@@ -22,7 +22,7 @@ public class MessageGUI extends JComponent implements Runnable {
     private JButton conversationsButton;
     private static String action;
 
-    // actionlistener
+    // actionListener
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {

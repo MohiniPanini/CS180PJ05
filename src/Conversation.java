@@ -42,7 +42,6 @@ public class Conversation {
 	public void writeToFile(String file) {
 		ArrayList<String> lines = new ArrayList<String>();
 		for (Message message : messages) {
-			System.out.println(message);
 			lines.add(message.toString());
 		}
 		String filename = "";
@@ -67,11 +66,15 @@ public class Conversation {
 				if (line == null) {
 					writer.println(filename);
 				}
+				boolean exist = false;
 				while (line != null) {
-					if (!filename.equals(line)) {
-						writer.println(filename);
+					if (filename.equals(line)) {
+						exist = true;
 					}
 					line = bfr.readLine();
+				}
+				if (!exist) {
+					writer.println(filename);
 				}
 			} catch(IOException e) {
 				e.printStackTrace();
@@ -82,7 +85,6 @@ public class Conversation {
 			e.printStackTrace();
 		}
 	}
-
 
 	public static Conversation readFromFile(String filename) {
 		ArrayList<Message> messages = new ArrayList<Message>();
@@ -120,11 +122,9 @@ public class Conversation {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (filenames != null) {
-			conversations.clear();
-			for (String filename : filenames) {
-				conversations.add(readFromFile(filename));
-			}
+		conversations.clear();
+		for (String filename : filenames) {
+			conversations.add(readFromFile(filename));
 		}
 
 	}
