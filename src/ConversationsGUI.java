@@ -79,9 +79,17 @@ public class ConversationsGUI extends JComponent implements Runnable {
             // Array for select buttons
             JButton[] selectButtons = new JButton[usersConversations.size()];
             int count = 0;
+            int numberOfConversationsDisplayed = 0;
             for (Conversation conversation : usersConversations) {
                 // each JLabel
-                ArrayList<User> users = conversation.getConvoUsers();;
+                ArrayList<User> users = conversation.getConvoUsers();
+
+                String filename = "";
+                for (User user : users) {
+                    filename = filename + user.getID() + "|";
+                }
+
+                filename = filename.substring(0, filename.length() - 1) + ".txt";
 
                 // Create string of all users usernames with space in between
                 StringBuilder usersString = new StringBuilder();
@@ -89,13 +97,13 @@ public class ConversationsGUI extends JComponent implements Runnable {
                     usersString.append(users.get(i).getUsername()).append(" ");
                 }
 
-                StringBuilder filename = new StringBuilder();
+                /*StringBuilder filename = new StringBuilder();
                 for (int i = 1; i < users.size(); i++) {
                     filename.append(users.get(i).getID()).append("|");
                 }
                 int length = filename.length();
                 filename.delete(length - 1, length);
-                filename.append(".txt");
+                filename.append(".txt"); */
 
                 JLabel conversationsLabel = null;
 
@@ -103,7 +111,10 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + MessageClient.getUser().getID() + ".txt"))) {
                     String hiddenConversationsLine = bfr.readLine();
                     if (!filename.equals(hiddenConversationsLine)) {
+                        System.out.println(filename);
                         // Add label and button
+                        ++numberOfConversationsDisplayed;
+                        System.out.println(numberOfConversationsDisplayed);
                         conversationsLabel = new JLabel(String.valueOf(usersString));
                         selectButtons[count] = new JButton("Select ");
                     }
@@ -113,6 +124,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
                 // each button
                 int finalCount = count;
+                JLabel finalConversationsLabel = conversationsLabel;
                 selectButtons[count].addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -138,7 +150,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
                             if (conversationMessages != null) {
                                 for (Message message : conversationMessages) {
-
 
 
                                     // each button to confirm update to message
@@ -170,7 +181,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
 
                                                     // update message in that conversation messages
                                                     message.setMessage(messageTextField.getText());
-
                                                 }
                                             });
                                         }
@@ -191,12 +201,16 @@ public class ConversationsGUI extends JComponent implements Runnable {
                             JLabel messagesTitle = new JLabel(usersString + "Messages");
                             JButton deleteConversationButton = new JButton("Delete Conversation");
                             // make deleteConversationButton usable
+
                             deleteConversationButton.addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
 
                                     // Add conversation to hidden conversations file
                                     ConversationsGUI.writeToHiddenConversationFile(conversation);
+                                    finalConversationsLabel.setVisible(false);
+                                    selectButtons[finalCount].setVisible(false);
+                                    messagesFrame.setVisible(false);
                                     JOptionPane.showMessageDialog(null, "Conversation Deleted",
                                             "Your conversation has been deleted", JOptionPane.INFORMATION_MESSAGE);
 
@@ -220,12 +234,13 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 labelAndButtonPanel.add(selectButtons[count]);
                 scrollPanel.add(labelAndButtonPanel);
                 count++;
+
             }
         } else {
+            System.out.println("no");
             JLabel label = new JLabel("No conversations");
             scrollPanel.add(label);
         }
-
         JScrollPane jsp = new JScrollPane(scrollPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         conversationsContent.add(panel1, BorderLayout.NORTH);
         conversationsContent.add(panel2, BorderLayout.CENTER);
@@ -259,7 +274,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
     // conversation that is to be deleted as parameter
     public static void writeToHiddenConversationFile(Conversation conversation) {
 
-        // Create hidden conversation file // format of Hiddenconvos|username
+        // Create hidden conversation file // format of Hiddenconvos|id
         String filename = "Hiddenconvos|" + MessageClient.getUser().getID() + ".txt";
         conversation.writeToFile(filename);
     }
