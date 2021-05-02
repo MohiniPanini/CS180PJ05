@@ -139,27 +139,47 @@ public class ConversationsGUI extends JComponent implements Runnable {
                             if (conversationMessages != null) {
                                 for (Message message : conversationMessages) {
 
-                                    // text field for each message so they can edit
-                                    JTextField messageTextField = new JTextField(10);
-                                    messageTextField.setText(message.getMessage());
+
 
                                     // each button to confirm update to message
-                                    JButton messageButton = new JButton("Submit Edit");
+                                    JLabel username = new JLabel(message.getUser().getUsername());
+                                    JButton messageButton = new JButton(message.getMessage());
+                                    JLabel time = new JLabel(message.getTime().toString());
 
                                     // if user clicks the button then the associated message is updated
                                     messageButton.addActionListener(new ActionListener() {
                                         @Override
                                         public void actionPerformed(ActionEvent e) {
-
+                                            JFrame editMessagesFrame = new JFrame();
+                                            Container messageContent = editMessagesFrame.getContentPane();
+                                            messageContent.setLayout(new BorderLayout());
+                                            editMessagesFrame.setSize(400, 200);
+                                            editMessagesFrame.setLocationRelativeTo(null);
+                                            editMessagesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                            // text field for each message so they can edit
+                                            JTextField messageTextField = new JTextField(10);
+                                            messageTextField.setText(message.getMessage());
                                             // update message in that conversation messages
                                             message.setMessage(messageTextField.getText());
+                                            JButton messageButton = new JButton("Submit Edit");
 
+                                            // if user clicks the button then the associated message is updated
+                                            messageButton.addActionListener(new ActionListener() {
+                                                @Override
+                                                public void actionPerformed(ActionEvent e) {
+
+                                                    // update message in that conversation messages
+                                                    message.setMessage(messageTextField.getText());
+
+                                                }
+                                            });
                                         }
                                     });
 
                                     JPanel textAndButtonPanel = new JPanel();
-                                    textAndButtonPanel.add(messageTextField);
+                                    textAndButtonPanel.add(username);
                                     textAndButtonPanel.add(messageButton);
+                                    textAndButtonPanel.add(time);
                                     messagesScrollPanel.add(textAndButtonPanel);
 
                                 }
