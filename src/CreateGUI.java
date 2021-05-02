@@ -1,7 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.util.*;
 
 /**
  * src.createGUI
@@ -16,15 +17,13 @@ public class CreateGUI extends JComponent implements Runnable {
 
     // Fields
     private JFrame createFrame;
-    private JTextField sendToTextField;
+    private JList<String> sendToUsers;
     private JTextField messageTextField;
     private static JButton sendButton;
 
     private String sendClicked;
-
-    public JTextField getSendToTextField() {
-        return sendToTextField;
-    }
+    private String[] usernames;
+    private StringBuilder selected;
 
     public JTextField getMessageTextField() {
         return messageTextField;
@@ -34,14 +33,16 @@ public class CreateGUI extends JComponent implements Runnable {
         return sendClicked;
     }
 
+    public String getSelected() {
+        return String.valueOf(selected);
+    }
+
     // ActionListener
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == sendButton) {
-                // Create conversation object with info and write to conversations file
                 sendClicked = "true";
-
                 createFrame.setVisible(false);
             }
         }
@@ -68,14 +69,52 @@ public class CreateGUI extends JComponent implements Runnable {
         // Labels and fields to add to inner panel
         JLabel sendToLabel = new JLabel("Send to: ");
         JLabel messageLabel = new JLabel("Message: ");
-        sendToTextField = new JTextField(10);
+        messageTextField = new JTextField(10);
+        usernames = new String[User.users.size() - 1];
+        int i = 0;
+        for (User user: User.users) {
+            if (user.getID() != MessageClient.getUser().getID()) {
+                usernames[i] = user.getUsername();
+                i++;
+            }
+        }
+        JList<String> selectUsers = new JList<String>(usernames);
+        selectUsers.setFixedCellHeight(15);
+        selectUsers.setFixedCellWidth(100);
+        selectUsers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        selectUsers.setVisibleRowCount(8);
+
+        JButton addButton = new JButton("Add>>>");
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int [] indices = selectUsers.getSelectedIndices();
+                ArrayList<String> selectedList = new ArrayList<String>();
+                selected = new StringBuilder();
+                for (int i: indices) {
+                    selectedList.add(usernames[i]);
+                    selected.append(usernames[i] + ",");
+                }
+                String[] selectedArray = Arrays.copyOf(selectedList.toArray(), selectedList.toArray().length, String[].class);
+                sendToUsers.setListData(selectedArray);
+            }
+        });
+
+        sendToUsers = new JList<String>();
+        sendToUsers.setFixedCellHeight(15);
+        sendToUsers.setFixedCellWidth(100);
+        selectUsers.setVisibleRowCount(8);
+        selectUsers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        add(new JScrollPane(sendToUsers));
         messageTextField = new JTextField(10);
 
         // top panel
         JPanel panelSend = new JPanel();
         panelSend.add(sendToLabel);
-        panelSend.add(sendToTextField);
-        // send to text field must have the usernames seperated by commas
+        panelSend.add(new JScrollPane(selectUsers));
+        panelSend.add(addButton);
+        panelSend.add(new JScrollPane(sendToUsers));
 
         // bottom panel
         JPanel panelMessage = new JPanel();
@@ -92,6 +131,7 @@ public class CreateGUI extends JComponent implements Runnable {
 
         // add panels to container and make frame visible
         createContent.add(outerPanel);
+        createFrame.getRootPane().setDefaultButton(sendButton);
         createFrame.setVisible(true);
 
     } // run
@@ -130,22 +170,37 @@ public class CreateGUI extends JComponent implements Runnable {
             }
         }
 
-        // if they don't display an error message
-        if (count == 0) {
-            JOptionPane.showMessageDialog(null, "Not a valid user!", "Invalid User",
-                    JOptionPane.ERROR_MESSAGE);
+        String filename = "";
+        for (User user : users) {
+            filename = filename + user.getID() + "|";
         }
 
-        // Create message object
-        Message message = new Message(MessageClient.getUser(), messageBox);
+        filename = filename.substring(0, filename.length() - 1) + ".txt";
+        File f = new File(filename);
+        if (f.exists()) {
+            JOptionPane.showMessageDialog(null, "Conversation already exist",
+                    "Create conversation", JOptionPane.ERROR_MESSAGE);
+            return null;
+        } else {
+            // Create message object
+            Message message = new Message(MessageClient.getUser(), messageBox);
 
-        // Create conversation object
-        ArrayList<Message> messageArrayList = new ArrayList<>();
-        messageArrayList.add(message);
+            // Create conversation object
+            ArrayList<Message> messageArrayList = new ArrayList<>();
+            messageArrayList.add(message);
 
-        // return conversation
-        return new Conversation(messageArrayList, users);
+            // sort users in ascending order of userID
+            Collections.sort(users, new SortByID());
+
+            // return conversation
+            return new Conversation(messageArrayList, users);
+        }
     } // createConversation
 
-
+    public class SortByID implements Comparator<User> {
+        // Used for sorting in ascending order of userID
+        public int compare(User a, User b) {
+            return a.getID() - b.getID();
+        }
+    }
 }

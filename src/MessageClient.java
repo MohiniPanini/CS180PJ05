@@ -150,9 +150,11 @@ public class MessageClient {
                         Thread.onSpinWait();
                     } // end while
                     if (create.getSendClicked().equals("true")) {
-                        Conversation newConversation = create.createConversation(create.getSendToTextField().getText(),
+                        Conversation newConversation = create.createConversation( create.getSelected(),
                                 create.getMessageTextField().getText(), user);
-                        newConversation.writeToFile("Conversations.txt");
+                        if (newConversation != null) {
+                            newConversation.writeToFile("Conversations.txt");
+                        }
                     }
                 }
                 // edit or delete account
@@ -252,6 +254,7 @@ public class MessageClient {
                         if (messageGUI.getAction().equals("import")) {
                             System.out.println("import");
                         } else if (messageGUI.getAction().equals("delete") || messageGUI.getAction().equals("closed")) {
+                            System.out.println("closed");
                             break;
                         }
                     }

@@ -55,47 +55,55 @@ public class Conversation {
 		return filename;
 	}
 
+	public void addMessage(Message message) {
+		messages.add(message);
+	}
+
+	public void deleteMessage(Message message) {
+		messages.remove(message);
+	}
+
 	public void writeToFile(String file) {
 		ArrayList<String> lines = new ArrayList<String>();
 		for (Message message : messages) {
 			lines.add(message.toString());
 		}
 
-		try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, true))) {
+		try (PrintWriter writer = new PrintWriter(new FileOutputStream(filename, false))) {
 			for (String line : lines) {
 				writer.println(line);
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		if (file.equals("Conversations.txt") || file.contains("Hiddenconvos|")) {
+			try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, true))) {
+				try (BufferedReader bfr = new BufferedReader(new FileReader(file))) {
+					String line = bfr.readLine();
 
-		try (PrintWriter writer = new PrintWriter(new FileOutputStream(file, true))) {
-			try (BufferedReader bfr = new BufferedReader(new FileReader(file))) {
-				String line = bfr.readLine();
-
-				if (line == null) {
-					writer.println(filename);
-				}
-				boolean exist = false;
-				while (line != null) {
-					if (filename.equals(line)) {
-						exist = true;
+					if (line == null) {
+						writer.println(filename);
+					} else {
+						boolean exist = false;
+						while (line != null) {
+							if (filename.equals(line)) {
+								exist = true;
+							}
+							line = bfr.readLine();
+						}
+						if (!exist) {
+							writer.println(filename);
+						}
 					}
-					line = bfr.readLine();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-				if (!exist) {
-					writer.println(filename);
-				}
-			} catch(IOException e) {
+
+
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-
 	}
 
 	public static Conversation readFromFile(String filename) {
@@ -127,7 +135,7 @@ public class Conversation {
 
 		try (BufferedReader reader = new BufferedReader(new FileReader("Conversations.txt"))) {
 			String filename = reader.readLine();
-			while (filename != null) {
+			while (filename != null && !filename.equals("")) {
 				filenames.add(filename);
 				filename = reader.readLine();
 			}
