@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 /**
  * MessageGUI
@@ -42,6 +44,7 @@ public class MessageGUI extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "Your conversation has been deleted",
                             "Conversation Deleted", JOptionPane.INFORMATION_MESSAGE);
                     action = "delete";
+                    messagesFrame.setVisible(false);
                 } // end if
             }
         }
@@ -71,7 +74,7 @@ public class MessageGUI extends JComponent implements Runnable {
             // show each message
             JLabel username = new JLabel(message.getUser().getUsername());
             JButton messageButton = new JButton(message.getMessage());
-            JLabel time = new JLabel(message.getTime().toString());
+            JLabel time = new JLabel(message.getTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
 
             // if user clicks the button
             messageButton.addMouseListener(new MouseAdapter() {
