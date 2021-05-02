@@ -80,9 +80,17 @@ public class ConversationsGUI extends JComponent implements Runnable {
             // Array for select buttons
             JButton[] selectButtons = new JButton[usersConversations.size()];
             int count = 0;
+            int numberOfConversationsDisplayed = 0;
             for (Conversation conversation : usersConversations) {
                 // each JLabel
-                ArrayList<User> users = conversation.getConvoUsers();;
+                ArrayList<User> users = conversation.getConvoUsers();
+
+                String filename = "";
+                for (User user : users) {
+                    filename = filename + user.getID() + "|";
+                }
+
+                filename = filename.substring(0, filename.length() - 1) + ".txt";
 
                 // Create string of all users usernames with space in between
                 StringBuilder usersString = new StringBuilder();
@@ -104,6 +112,8 @@ public class ConversationsGUI extends JComponent implements Runnable {
                     }
                     if (!deleted) {
                         // Add label and button
+                        ++numberOfConversationsDisplayed;
+                        System.out.println(numberOfConversationsDisplayed);
                         conversationsLabel = new JLabel(String.valueOf(usersString));
                         selectButtons[count] = new JButton("Select");
                     }
@@ -124,6 +134,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
                                 selected = conversation;
                                 action = "view";
                             }
+
                         }
                     });
 
@@ -134,12 +145,13 @@ public class ConversationsGUI extends JComponent implements Runnable {
                     scrollPanel.add(labelAndButtonPanel);
                 }
                 count++;
+
             }
         } else {
+            System.out.println("no");
             JLabel label = new JLabel("No conversations");
             scrollPanel.add(label);
         }
-
         JScrollPane jsp = new JScrollPane(scrollPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         conversationsContent.add(panel1, BorderLayout.NORTH);
         conversationsContent.add(panel2, BorderLayout.CENTER);
@@ -165,15 +177,13 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 }
             }
         }
-
         return usersConversations;
-
     }
 
     // conversation that is to be deleted as parameter
     public static void writeToHiddenConversationFile(Conversation conversation) {
 
-        // Create hidden conversation file // format of Hiddenconvos|username
+        // Create hidden conversation file // format of Hiddenconvos|id
         String filename = "Hiddenconvos|" + MessageClient.getUser().getID() + ".txt";
         conversation.writeToFile(filename);
     }

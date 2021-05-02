@@ -95,6 +95,7 @@ public class Conversation {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	public static Conversation readFromFile(String filename) {
