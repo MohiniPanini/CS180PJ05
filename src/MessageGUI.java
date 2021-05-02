@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 /**
  * MessageGUI
@@ -13,82 +12,154 @@ import java.awt.event.ActionListener;
  */
 
 public class MessageGUI extends JComponent implements Runnable {
+    private Conversation conversation;
+    private String action;
 
     // Fields
-    private JFrame frame;
-    private JButton createButton;
-    private JButton editButton;
-    private JButton deleteButton;
-    private JButton conversationsButton;
-    private static String action;
+    private JFrame messagesFrame;
+    private JPanel messagesScrollPanel;
+    private JButton deleteConversationButton;
+    private int x;
+    private int y;
+
+    public MessageGUI(Conversation conversation) {
+        this.conversation = conversation;
+    }
+
+    public String getAction() {
+        return action;
+    }
 
     // actionListener
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // if user wants to create message
-            if (e.getSource() == createButton) {
-                frame.setVisible(false);
-                CreateGUI create = new CreateGUI();
-                SwingUtilities.invokeLater(create);
-                action = "create message";
-
-            } // end if
-
-            // if user wants to edit message
-            if (e.getSource() == editButton) {
-                frame.setVisible(false);
-                EditMessageGUI edit = new EditMessageGUI();
-                SwingUtilities.invokeLater(edit);
-                action = "edit message";
-            } // end if
-
-            // if user wants to delete message
-            if (e.getSource() == deleteButton) {
-                frame.setVisible(false);
-                DeleteMessageGUI delete = new DeleteMessageGUI();
-                SwingUtilities.invokeLater(delete);
-                action = "delete message";
-            } // end if
-
-            // if user wants to view conversations
-            if (e.getSource() == conversationsButton) {
-                frame.setVisible(false);
-                ConversationsGUI conversations = new ConversationsGUI();
-                SwingUtilities.invokeLater(conversations);
-                action = "view conversations";
-            } // end if
+            if (e.getSource() == deleteConversationButton) {
+                if (JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to delete conversation?", "Delete Conversation",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    ConversationsGUI.writeToHiddenConversationFile(conversation);
+                    JOptionPane.showMessageDialog(null, "Your conversation has been deleted",
+                            "Conversation Deleted", JOptionPane.INFORMATION_MESSAGE);
+                    action = "delete";
+                } // end if
+            }
         }
-    }; // actionListener
+    };
+
+    WindowListener windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent evt) {
+            action = "closed";
+        }
+    };
 
     public void run() {
-        frame = new JFrame("Messages"); // JFrame
-        Container content = frame.getContentPane(); // Container for panels
-        content.setLayout(new BorderLayout()); // Set layout to border
-        frame.setSize(600, 100); // size
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // default close
+        // Create new frame for messages
+        messagesFrame = new JFrame();
+        Container messageContent = messagesFrame.getContentPane();
+        messageContent.setLayout(new BorderLayout());
+        messagesFrame.setSize(400, 600);
+        messagesFrame.setLocationRelativeTo(null);
+        messagesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // buttons
-        createButton = new JButton("Create new message");
-        createButton.addActionListener(actionListener);
-        editButton = new JButton("Edit existing messages");
-        editButton.addActionListener(actionListener);
-        deleteButton = new JButton("Delete existing messages");
-        deleteButton.addActionListener(actionListener);
-        conversationsButton = new JButton("View Conversations");
-        conversationsButton.addActionListener(actionListener);
+        // scroll panel for messages
+        messagesScrollPanel = new JPanel();
+        messagesScrollPanel.setLayout(new BoxLayout(messagesScrollPanel, BoxLayout.PAGE_AXIS));
 
-        // panel
-        JPanel panel = new JPanel();
-        panel.add(createButton);
-        panel.add(editButton);
-        panel.add(deleteButton);
-        panel.add(conversationsButton);
+        for (Message message : conversation.getMessages()) {
+            // show each message
+            JLabel username = new JLabel(message.getUser().getUsername());
+            JButton messageButton = new JButton(message.getMessage());
+            JLabel time = new JLabel(message.getTime().toString());
 
-        content.add(panel, BorderLayout.CENTER);
+            // if user clicks the button
+            messageButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    x = e.getX();
+                    y = e.getY();
+                    JPopupMenu popupmenu = new JPopupMenu("Message");
 
-        frame.setVisible(true);
+                    JMenuItem edit = new JMenuItem("Edit");
+                    JMenuItem delete = new JMenuItem("Delete");
+                    popupmenu.add(edit);
+                    popupmenu.add(delete);
+
+                    // add the popup to the frame
+                    popupmenu.show(messageButton, x, y);
+                    edit.addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent e) {
+                            JFrame editMessagesFrame = new JFrame();
+                            Container messageContent = editMessagesFrame.getContentPane();
+                            messageContent.setLayout(new BorderLayout());
+                            editMessagesFrame.setSize(400, 200);
+                            editMessagesFrame.setLocationRelativeTo(null);
+                            editMessagesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                            JPanel editPanel = new JPanel();
+                            // text field for each message so they can edit
+                            JTextField messageTextField = new JTextField(10);
+                            messageTextField.setText(message.getMessage());
+                            JButton editButton = new JButton("Submit Edit");
+                            editPanel.add(messageTextField);
+                            editPanel.add(editButton);
+                            // if user clicks the button then the associated message is updated
+                            editButton.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    // update message in that conversation messages
+                                    message.setMessage(messageTextField.getText());
+                                    conversation.writeToFile(conversation.getFilename());
+                                    action = "edit";
+                                    editMessagesFrame.setVisible(false);
+                                    messagesFrame.setVisible(false);
+                                }
+                            });
+                            editMessagesFrame.add(editPanel);
+                            editMessagesFrame.setVisible(true);
+                        }
+                    });
+                    delete.addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent e) {
+
+                        }
+                    });
+                }
+            });
+
+
+            JPanel textAndButtonPanel = new JPanel();
+            textAndButtonPanel.add(username);
+            textAndButtonPanel.add(messageButton);
+            textAndButtonPanel.add(time);
+            messagesScrollPanel.add(textAndButtonPanel);
+        }
+
+        // make frame visible
+        JScrollPane messagesJSP = new JScrollPane(messagesScrollPanel,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        deleteConversationButton = new JButton("Delete Conversation");
+        // make deleteConversationButton usable
+        deleteConversationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ConversationsGUI.writeToHiddenConversationFile(conversation);
+                if (JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to delete conversation?", "Delete Conversation",
+                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    JOptionPane.showMessageDialog(null, "Your conversation has been deleted",
+                            "Conversation Deleted", JOptionPane.INFORMATION_MESSAGE);
+                    action = "delete";
+                }
+            }
+        });
+        JButton exportConversationButton = new JButton("Export Conversation");
+        JPanel topPanel = new JPanel();
+        topPanel.add(deleteConversationButton);
+        topPanel.add(exportConversationButton);
+        messageContent.add(topPanel, BorderLayout.NORTH);
+        messageContent.add(messagesJSP, BorderLayout.CENTER);
+        messagesFrame.setVisible(true);
     } // run
 
 }

@@ -15,20 +15,22 @@ import java.util.ArrayList;
  */
 
 public class ConversationsGUI extends JComponent implements Runnable {
+    private Conversation selected;
     // Fields
     private String action;
     private JFrame conversationsFrame;
     private JButton createButton;
     private JButton editAccountButton;
 
-
     // static variable of all currently logged in users conversations
-    public static ArrayList<Conversation> usersConversations;
-
-    private JFrame messagesFrame;
+    public ArrayList<Conversation> usersConversations;
 
     public String getAction() {
         return action;
+    }
+
+    public Conversation getSelected() {
+        return selected;
     }
 
     ActionListener actionListener = new ActionListener() {
@@ -70,7 +72,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
         JPanel panel2 = new JPanel();
         panel2.add(title);
 
-
         // Display conversations
         JPanel scrollPanel = new JPanel();
         scrollPanel.setLayout(new BoxLayout(scrollPanel, BoxLayout.PAGE_AXIS));
@@ -97,142 +98,52 @@ public class ConversationsGUI extends JComponent implements Runnable {
                     usersString.append(users.get(i).getUsername()).append(" ");
                 }
 
-                /*StringBuilder filename = new StringBuilder();
-                for (int i = 1; i < users.size(); i++) {
-                    filename.append(users.get(i).getID()).append("|");
-                }
-                int length = filename.length();
-                filename.delete(length - 1, length);
-                filename.append(".txt"); */
-
                 JLabel conversationsLabel = null;
 
                 // Read through conversations and don't display any conversations that have been deleted
                 try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + MessageClient.getUser().getID() + ".txt"))) {
+                    boolean deleted = false;
                     String hiddenConversationsLine = bfr.readLine();
-                    if (!filename.equals(hiddenConversationsLine)) {
-                        System.out.println(filename);
+                    while (hiddenConversationsLine != null) {
+                        if (conversation.getFilename().equals(hiddenConversationsLine)) {
+                            deleted = true;
+                        }
+                        hiddenConversationsLine = bfr.readLine();
+                    }
+                    if (!deleted) {
                         // Add label and button
                         ++numberOfConversationsDisplayed;
                         System.out.println(numberOfConversationsDisplayed);
                         conversationsLabel = new JLabel(String.valueOf(usersString));
-                        selectButtons[count] = new JButton("Select ");
+                        selectButtons[count] = new JButton("Select");
                     }
                 } catch (IOException ie) {
                     ie.printStackTrace();
                 }
 
                 // each button
-                int finalCount = count;
-                JLabel finalConversationsLabel = conversationsLabel;
-                selectButtons[count].addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
+                if (selectButtons[count] != null) {
+                    int finalCount = count;
+                    selectButtons[count].addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
 
-                        // if select is clicked open associated messages
-                        if (e.getSource() == selectButtons[finalCount]) {
-
-                            // Get messages for conversation button that was clicked
-                            ArrayList<Message> conversationMessages = conversation.getMessages();
-
-                            // Create new frame for messages
-                            messagesFrame = new JFrame();
-                            Container messageContent = messagesFrame.getContentPane();
-                            messageContent.setLayout(new BorderLayout());
-                            messagesFrame.setSize(400, 600);
-                            messagesFrame.setLocationRelativeTo(null);
-                            messagesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-                            // scroll panel for messages
-                            JPanel messagesScrollPanel = new JPanel();
-                            messagesScrollPanel.setLayout(new BoxLayout(messagesScrollPanel, BoxLayout.PAGE_AXIS));
-
-
-                            if (conversationMessages != null) {
-                                for (Message message : conversationMessages) {
-
-
-                                    // each button to confirm update to message
-                                    JLabel username = new JLabel(message.getUser().getUsername());
-                                    JButton messageButton = new JButton(message.getMessage());
-                                    JLabel time = new JLabel(message.getTime().toString());
-
-                                    // if user clicks the button then the associated message is updated
-                                    messageButton.addActionListener(new ActionListener() {
-                                        @Override
-                                        public void actionPerformed(ActionEvent e) {
-                                            JFrame editMessagesFrame = new JFrame();
-                                            Container messageContent = editMessagesFrame.getContentPane();
-                                            messageContent.setLayout(new BorderLayout());
-                                            editMessagesFrame.setSize(400, 200);
-                                            editMessagesFrame.setLocationRelativeTo(null);
-                                            editMessagesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                                            // text field for each message so they can edit
-                                            JTextField messageTextField = new JTextField(10);
-                                            messageTextField.setText(message.getMessage());
-                                            // update message in that conversation messages
-                                            message.setMessage(messageTextField.getText());
-                                            JButton messageButton = new JButton("Submit Edit");
-
-                                            // if user clicks the button then the associated message is updated
-                                            messageButton.addActionListener(new ActionListener() {
-                                                @Override
-                                                public void actionPerformed(ActionEvent e) {
-
-                                                    // update message in that conversation messages
-                                                    message.setMessage(messageTextField.getText());
-                                                }
-                                            });
-                                        }
-                                    });
-
-                                    JPanel textAndButtonPanel = new JPanel();
-                                    textAndButtonPanel.add(username);
-                                    textAndButtonPanel.add(messageButton);
-                                    textAndButtonPanel.add(time);
-                                    messagesScrollPanel.add(textAndButtonPanel);
-
-                                }
+                            // if select is clicked open associated messages
+                            if (e.getSource() == selectButtons[finalCount]) {
+                                // Get messages for conversation button that was clicked
+                                selected = conversation;
+                                action = "view";
                             }
 
-                            // make frame visible
-                            JScrollPane messagesJSP = new JScrollPane(messagesScrollPanel,
-                                    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                            JLabel messagesTitle = new JLabel(usersString + "Messages");
-                            JButton deleteConversationButton = new JButton("Delete Conversation");
-                            // make deleteConversationButton usable
-
-                            deleteConversationButton.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-
-                                    // Add conversation to hidden conversations file
-                                    ConversationsGUI.writeToHiddenConversationFile(conversation);
-                                    finalConversationsLabel.setVisible(false);
-                                    selectButtons[finalCount].setVisible(false);
-                                    messagesFrame.setVisible(false);
-                                    JOptionPane.showMessageDialog(null, "Conversation Deleted",
-                                            "Your conversation has been deleted", JOptionPane.INFORMATION_MESSAGE);
-
-                                }
-                            });
-                            JButton exportConversationButton = new JButton("Export Conversation");
-                            JPanel topPanel = new JPanel();
-                            topPanel.add(messagesTitle);
-                            topPanel.add(deleteConversationButton);
-                            topPanel.add(exportConversationButton);
-                            messageContent.add(topPanel, BorderLayout.NORTH);
-                            messageContent.add(messagesJSP, BorderLayout.CENTER);
-                            messagesFrame.setVisible(true);
                         }
-                    }
-                });
+                    });
 
-                // Create inner panel and add to scrollable panel
-                JPanel labelAndButtonPanel = new JPanel();
-                labelAndButtonPanel.add(conversationsLabel);
-                labelAndButtonPanel.add(selectButtons[count]);
-                scrollPanel.add(labelAndButtonPanel);
+                    // Create inner panel and add to scrollable panel
+                    JPanel labelAndButtonPanel = new JPanel();
+                    labelAndButtonPanel.add(conversationsLabel);
+                    labelAndButtonPanel.add(selectButtons[count]);
+                    scrollPanel.add(labelAndButtonPanel);
+                }
                 count++;
 
             }
@@ -266,9 +177,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 }
             }
         }
-
         return usersConversations;
-
     }
 
     // conversation that is to be deleted as parameter
