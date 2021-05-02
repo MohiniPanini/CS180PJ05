@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -19,8 +18,10 @@ public class ConversationsGUI extends JComponent implements Runnable {
     // Fields
     private String action;
     private JFrame conversationsFrame;
-    private JButton createButton;
     private JButton editAccountButton;
+    private JButton logoutButton;
+    private JButton createButton;
+    private JButton importConversationButton;
 
     // static variable of all currently logged in users conversations
     public ArrayList<Conversation> usersConversations;
@@ -43,29 +44,50 @@ public class ConversationsGUI extends JComponent implements Runnable {
             } else if (e.getSource() == editAccountButton) {
                 conversationsFrame.setVisible(false);
                 action = "edit";
+            } else if (e.getSource() == importConversationButton) {
+                conversationsFrame.setVisible(false);
+                action = "import";
+            } else if (e.getSource() == logoutButton) {
+                conversationsFrame.setVisible(false);
+                action = "logout";
             } // end if
         }
     }; // actionListener
+
+    WindowListener windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent evt) {
+            action = "closed";
+        }
+    };
 
     public void run() {
         // frame, container for when conversations is clicked
         conversationsFrame = new JFrame("Conversations");
         Container conversationsContent = conversationsFrame.getContentPane();
         conversationsContent.setLayout(new BorderLayout());
-        conversationsFrame.setSize(500, 600);
+        conversationsFrame.setSize(400, 600);
         conversationsFrame.setLocationRelativeTo(null);
         conversationsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        conversationsFrame.addWindowListener(windowListener);
 
         // create new message, delete account button
         JPanel panel1 = new JPanel();
-        createButton = new JButton("Create new message");
-        createButton.addActionListener(actionListener);
-        panel1.add(createButton);
+        panel1.setPreferredSize(new Dimension(400, 30));
         editAccountButton = new JButton("Edit or delete Account");
         editAccountButton.addActionListener(actionListener);
         panel1.add(editAccountButton);
-        JButton importConversationButton = new JButton("Import Conversation");
-        panel1.add(importConversationButton);
+        logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(actionListener);
+        panel1.add(logoutButton);
+        JPanel panel2 = new JPanel();
+        panel2.setPreferredSize(new Dimension(400, 30));
+        createButton = new JButton("Create new message");
+        createButton.addActionListener(actionListener);
+        panel2.add(createButton);
+        importConversationButton = new JButton("Import Conversation");
+        importConversationButton.addActionListener(actionListener);
+        panel2.add(importConversationButton);
 
         // Display conversations list
         JPanel scrollPanel = new JPanel();
@@ -82,7 +104,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
                     return getPreferredSize();
                 }
             };
-            panel.setPreferredSize(new Dimension(500, 40));
+            panel.setPreferredSize(new Dimension(400, 40));
             panel.add(title);
             scrollPanel.add(panel);
 
@@ -145,7 +167,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
                             return getPreferredSize();
                         }
                     };
-                    labelAndButtonPanel.setPreferredSize(new Dimension(500, 30));
+                    labelAndButtonPanel.setPreferredSize(new Dimension(400, 40));
                     labelAndButtonPanel.add(conversationsLabel);
                     labelAndButtonPanel.add(selectButtons[count]);
                     scrollPanel.add(labelAndButtonPanel);
@@ -163,12 +185,16 @@ public class ConversationsGUI extends JComponent implements Runnable {
                     return getPreferredSize();
                 }
             };
-            panel.setPreferredSize(new Dimension(500, 40));
+            panel.setPreferredSize(new Dimension(400, 40));
             panel.add(title);
             scrollPanel.add(panel);
         }
         JScrollPane jsp = new JScrollPane(scrollPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        conversationsContent.add(panel1, BorderLayout.NORTH);
+        JPanel topPanel = new JPanel();
+        topPanel.add(panel1);
+        topPanel.add(panel2);
+        topPanel.setPreferredSize(new Dimension(400, 80));
+        conversationsContent.add(topPanel, BorderLayout.NORTH);
         conversationsContent.add(jsp, BorderLayout.CENTER);
         conversationsFrame.setVisible(true);
     } // run
@@ -183,8 +209,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
         Conversation.readAllConversations();
         // Determine which of the conversations are associated with currently logged in user
         for (Conversation conversation : Conversation.conversations) {
-
-
             for (User loggedIN : conversation.getConvoUsers()) {
                 if (loggedIN.getUsername().equals(LoginGUI.username)) {
                     usersConversations.add(conversation);

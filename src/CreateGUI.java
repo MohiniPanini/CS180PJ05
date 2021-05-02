@@ -133,7 +133,6 @@ public class CreateGUI extends JComponent implements Runnable {
         createContent.add(outerPanel);
         createFrame.getRootPane().setDefaultButton(sendButton);
         createFrame.setVisible(true);
-
     } // run
 
     // Creates conversation object when send button is clicked
