@@ -90,13 +90,13 @@ public class LoginGUI extends JComponent implements Runnable {
         panel3.add(panel1);
         panel3.add(panel2);
         panel3.add(loginButton);
-        JLabel labelOr = new JLabel("Or");
-        panel3.add(labelOr);
         content.add(panel3, BorderLayout.CENTER);
         //  create account and edit or delete button on SOUTH
         createAccountButton = new JButton("Create account");
         createAccountButton.addActionListener(actionListener);
         JPanel panel4 = new JPanel();
+        JLabel create = new JLabel("Don't have an account?");
+        panel4.add(create);
         panel4.add(createAccountButton);
         content.add(panel4, BorderLayout.SOUTH);
         loginFrame.setVisible(true);

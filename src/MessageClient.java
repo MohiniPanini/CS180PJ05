@@ -9,7 +9,7 @@ import java.awt.event.*;
  * Client for the Messaging app.
  *
  * @author Luka Narisawa,
- * @version April 17, 2021
+ * @version May 1, 2021
  */
 public class MessageClient {
     private static User user = null;
@@ -26,9 +26,6 @@ public class MessageClient {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             // reading from server
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-
-
 
             // Log in GUI
             // login with username and password, or select "Create account" or "Edit or delete account"
@@ -114,7 +111,7 @@ public class MessageClient {
                                     created = true;
                                     loggedIn = true;
                                     // Give each user a hidden conversations file
-                                    new File("Hiddenconvos|" + user.getID());
+                                    new FileOutputStream("Hiddenconvos|" + user.getID() + ".txt");
                                     JOptionPane.showMessageDialog(null,
                                             "Account created successfully", "Create account",
                                             JOptionPane.INFORMATION_MESSAGE);
@@ -250,7 +247,6 @@ public class MessageClient {
                     SwingUtilities.invokeLater(messageGUI);
                 }
             }
-
         }
         catch (IOException e) {
             e.printStackTrace();
