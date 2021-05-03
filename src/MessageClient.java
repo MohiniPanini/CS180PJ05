@@ -42,7 +42,8 @@ public class MessageClient {
                     // login options
                     switch (loginGUI.getAction()) {
                         case ("login"): {
-                            String usernamePassword = String.format("%s|%s", loginGUI.getUsername(), loginGUI.getPassword());
+                            String usernamePassword = String.format("%s|%s", loginGUI.getUsername(),
+                                    loginGUI.getPassword());
                             out.write(usernamePassword);
                             out.println();
                             out.flush();
@@ -64,7 +65,8 @@ public class MessageClient {
                             boolean created = false;
                             while (!created) {
                                 String password = null;
-                                String username = JOptionPane.showInputDialog(null, "Enter username",
+                                String username = JOptionPane.showInputDialog(null,
+                                        "Enter username",
                                         "Create account", JOptionPane.QUESTION_MESSAGE);
                                 if (username == null) {
                                     out.write("Go back to login");
@@ -97,7 +99,8 @@ public class MessageClient {
                                         invalid = in.readLine();
                                         if (invalid.equals("invalid char")) {
                                             JOptionPane.showMessageDialog(null,
-                                                    "Do not use space ( ), comma (,), or vertical bar (|)", "Create account",
+                                                    "Do not use space ( ), comma (,), or vertical bar (|)",
+                                                    "Create account",
                                                     JOptionPane.ERROR_MESSAGE);
                                         } else if (invalid.equals("invalid")) {
                                             JOptionPane.showMessageDialog(null,
@@ -117,7 +120,8 @@ public class MessageClient {
                                     } // end while
                                 } else if (alreadyExist.equals("Invalid username")) {
                                     JOptionPane.showMessageDialog(null,
-                                            "Do not use space ( ), comma (,), or vertical bar (|)", "Create account",
+                                            "Do not use space ( ), comma (,), or vertical bar (|)",
+                                            "Create account",
                                             JOptionPane.ERROR_MESSAGE);
                                 } else {
                                     JOptionPane.showMessageDialog(null, alreadyExist,
@@ -174,7 +178,8 @@ public class MessageClient {
                         if (editAccountGUI.getAction().equals("username")) {
                             boolean changed = false;
                             while (!changed) {
-                                String username = JOptionPane.showInputDialog(null, "Enter username",
+                                String username = JOptionPane.showInputDialog(null,
+                                        "Enter username",
                                         "Create account", JOptionPane.QUESTION_MESSAGE);
                                 if (username == null) {
                                     out.write("Go back to ConversationGUI");
@@ -204,7 +209,8 @@ public class MessageClient {
                             boolean changed = false;
                             while (!changed) {
                                 String newPassword = null;
-                                newPassword = JOptionPane.showInputDialog(null, "Enter new password",
+                                newPassword = JOptionPane.showInputDialog(null,
+                                        "Enter new password",
                                         "Change Password", JOptionPane.QUESTION_MESSAGE);
                                 if (newPassword == null) {
                                     out.write("Go back to ConversationGUI");
@@ -235,8 +241,9 @@ public class MessageClient {
                                 } // end if
                             } // end while
                         } else if (editAccountGUI.getAction().equals("delete")) {
-                            int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete account?",
-                                    "Delete account", JOptionPane.YES_NO_OPTION);
+                            int confirm = JOptionPane.showConfirmDialog(null,
+                                    "Are you sure you want to delete account?", "Delete account",
+                                    JOptionPane.YES_NO_OPTION);
                             if (confirm == JOptionPane.YES_OPTION) {
                                 out.write("yes");
                                 out.println();
@@ -286,12 +293,13 @@ public class MessageClient {
                             }
                             if (messageGUI.getAction().equals("export")) {
                                 String newFilename = JOptionPane.showInputDialog(null,
-                                        "Enter filename for exporting conversation (Example.csv)", "Export Conversation",
-                                        JOptionPane.QUESTION_MESSAGE);
+                                        "Enter filename for exporting conversation (Example.csv)",
+                                        "Export Conversation", JOptionPane.QUESTION_MESSAGE);
                                 if (newFilename != null) {
                                     conversationsGUI.getSelected().exportToFile(newFilename);
                                 }
-                            } else if (messageGUI.getAction().equals("delete") || messageGUI.getAction().equals("closed")) {
+                            } else if (messageGUI.getAction().equals("delete") ||
+                                    messageGUI.getAction().equals("closed")) {
                                 break;
                             }
                         }
