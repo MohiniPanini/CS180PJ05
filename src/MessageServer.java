@@ -68,7 +68,6 @@ public class MessageServer {
                 while (true) {
                     while (!loggedIn) {
                         String action = in.readLine();
-                        System.out.println(action);
                         switch (action) {
                             case ("login"): {
                                 // log in
@@ -137,7 +136,6 @@ public class MessageServer {
                                         out.println();
                                         out.flush();
                                     } else {
-                                        System.out.println("create account username");
                                         out.write("validUsername");
                                         out.println();
                                         out.flush();
@@ -229,14 +227,15 @@ public class MessageServer {
                                 return;
                             }
                         }
-                        System.out.println(loggedIn);
                     } // end login
 
                     // continue until user quits
                     while (true) {
                         //conversation process
+                        out.write(user.toString());
+                        out.println();
+                        out.flush();
                         String conversationAction = in.readLine();
-                        System.out.println(conversationAction + "GUI");
                         if (conversationAction.equals("create")) {
                         } else if (conversationAction.equals("edit")) {
                             String editAction = in.readLine();
@@ -324,7 +323,7 @@ public class MessageServer {
                                         out.println();
                                         out.flush();
                                     }else if (length && digit && Uppercase && Lowercase) {
-                                        user.setUsername(password);
+                                        user.setPassword(password);
                                         User.writeAllUsersToFile();
                                         out.write("valid");
                                         out.println();

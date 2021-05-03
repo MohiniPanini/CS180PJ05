@@ -143,7 +143,6 @@ public class Conversation {
 				firstLine.append(user.getID()).append(",");
 			}
 			firstLine.delete(firstLine.length() - 1, firstLine.length());
-			System.out.println(firstLine);
 			writer.println(firstLine);
 			for (String line : lines) {
 				writer.println(line);

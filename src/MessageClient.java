@@ -136,8 +136,8 @@ public class MessageClient {
                 // go back to conversationGUI until user closes app
                 while (true) {
                     // Display gui to give user conversations list
+                    user = User.fromString(in.readLine());
                     ConversationsGUI conversationsGUI = new ConversationsGUI();
-                    System.out.println(user);
                     User.getAllUsersFromFile();
                     conversationsGUI.usersConversations = conversationsGUI.usersConversations();
                     SwingUtilities.invokeLater(conversationsGUI);
@@ -158,7 +158,6 @@ public class MessageClient {
                                     create.getMessageTextField().getText(), user);
                             if (newConversation != null) {
                                 newConversation.writeToFile("Conversations.txt");
-                                System.out.println("created");
                             }
                         }
                     }
@@ -291,7 +290,6 @@ public class MessageClient {
                                         JOptionPane.QUESTION_MESSAGE);
                                 if (newFilename != null) {
                                     conversationsGUI.getSelected().exportToFile(newFilename);
-                                    System.out.println("export");
                                 }
                             } else if (messageGUI.getAction().equals("delete") || messageGUI.getAction().equals("closed")) {
                                 break;
