@@ -32,17 +32,7 @@ public class MessageGUI extends JComponent implements Runnable {
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == deleteConversationButton) {
-                if (JOptionPane.showConfirmDialog(null,
-                        "Are you sure you want to delete conversation?", "Delete Conversation",
-                        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    ConversationsGUI.writeToHiddenConversationFile(conversation);
-                    JOptionPane.showMessageDialog(null, "Your conversation has been deleted",
-                            "Conversation Deleted", JOptionPane.INFORMATION_MESSAGE);
-                    action = "delete";
-                    messagesFrame.setVisible(false);
-                } // end if
-            } else if (e.getSource() == sendButton) {
+            if (e.getSource() == sendButton) {
                 Message message = new Message(MessageClient.getUser(), messageText.getText());
                 conversation.addMessage(message);
                 action = "send";
@@ -204,6 +194,7 @@ public class MessageGUI extends JComponent implements Runnable {
                         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     JOptionPane.showMessageDialog(null, "Your conversation has been deleted",
                             "Conversation Deleted", JOptionPane.INFORMATION_MESSAGE);
+                    messagesFrame.setVisible(false);
                     action = "delete";
                 }
             }

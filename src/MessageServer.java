@@ -191,8 +191,8 @@ public class MessageServer {
                                                             "Users.txt"));
                                                     String line2 = bfr2.readLine();
                                                     while (line2 != null) {
-                                                        int currentId = Integer.parseInt(line2.substring(line2.lastIndexOf(
-                                                                "|") + 1));
+                                                        int currentId = Integer.parseInt(line2.substring(line2.
+                                                                lastIndexOf("|") + 1));
                                                         if (currentId == id) {
                                                             unique = false;
                                                         } // end if

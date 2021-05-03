@@ -157,6 +157,7 @@ public class MessageClient {
                                     create.getMessageTextField().getText(), user);
                             if (newConversation != null) {
                                 newConversation.writeToFile("Conversations.txt");
+                                System.out.println("created");
                             }
                         }
                     }

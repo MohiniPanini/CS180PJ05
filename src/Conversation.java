@@ -176,7 +176,7 @@ public class Conversation {
                 try (BufferedReader bfr = new BufferedReader(new FileReader(file))) {
                     String line = bfr.readLine();
 
-                    if (line == null) {
+                    if (line == null || line.length() == 0) {
                         writer.println(filename);
                     } else {
                         boolean exist = false;
