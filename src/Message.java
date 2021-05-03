@@ -76,12 +76,14 @@ public class Message {
         }
         int userID = user.getID();
         String timeString = time.toString();
-        return String.format("%s|%s|%s", userID, message.replaceAll(",", "THEREWASACOMMAHERE###"), timeString);
+        return String.format("%s|%s|%s", userID, message.replaceAll(",", "THEREWASACOMMAHERE###"),
+                timeString);
     }
 
     public String exportToString() { //follows this format: [userID,message,timeString]
         int userID = user.getID();
         String timeString = time.toString();
-        return String.format("%s,%s,%s", userID, message.replaceAll(",", "THEREWASACOMMAHERE###"), timeString);
+        return String.format("%s,%s,%s", userID, message.replaceAll(",", "THEREWASACOMMAHERE###"),
+                timeString);
     }
 }

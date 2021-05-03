@@ -96,7 +96,8 @@ public class CreateGUI extends JComponent implements Runnable {
                     selectedList.add(usernames[i]);
                     selected.append(usernames[i] + ",");
                 }
-                String[] selectedArray = Arrays.copyOf(selectedList.toArray(), selectedList.toArray().length, String[].class);
+                String[] selectedArray = Arrays.copyOf(selectedList.toArray(), selectedList.toArray().length,
+                        String[].class);
                 sendToUsers.setListData(selectedArray);
             }
         });
@@ -177,7 +178,8 @@ public class CreateGUI extends JComponent implements Runnable {
         filename = filename.substring(0, filename.length() - 1) + ".txt";
         File f = new File(filename);
         if (f.exists()) {
-            try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + MessageClient.getUser().getID() + ".txt"))) {
+            try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" +
+                    MessageClient.getUser().getID() + ".txt"))) {
                 String line = bfr.readLine();
                 ArrayList<String> lines = new ArrayList<String>();
 
@@ -198,7 +200,8 @@ public class CreateGUI extends JComponent implements Runnable {
                     JOptionPane.showMessageDialog(null, "Conversation already exist",
                             "Create conversation", JOptionPane.ERROR_MESSAGE);
                 }
-                try (PrintWriter writer = new PrintWriter(new FileOutputStream("Hiddenconvos|" + MessageClient.getUser().getID() + ".txt", false))) {
+                try (PrintWriter writer = new PrintWriter(new FileOutputStream("Hiddenconvos|" +
+                        MessageClient.getUser().getID() + ".txt", false))) {
                     for (String line1 : lines) {
                         writer.println(line1);
                     }

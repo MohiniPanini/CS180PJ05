@@ -124,7 +124,8 @@ public class ConversationsGUI extends JComponent implements Runnable {
                 JLabel conversationsLabel = null;
 
                 // Read through conversations and don't display any conversations that have been deleted
-                try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + MessageClient.getUser().getID() + ".txt"))) {
+                try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" +
+                        MessageClient.getUser().getID() + ".txt"))) {
                     boolean deleted = false;
                     String hiddenConversationsLine = bfr.readLine();
                     while (hiddenConversationsLine != null) {
@@ -167,15 +168,15 @@ public class ConversationsGUI extends JComponent implements Runnable {
                     });
 
                     // Create inner panel and add to scrollable panel
-                    JPanel labelAndButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT)) {
+                    JPanel labelAndButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)) {
                         @Override
                         public Dimension getMaximumSize() {
                             return getPreferredSize();
                         }
                     };
                     labelAndButtonPanel.setPreferredSize(new Dimension(400, 40));
-                    labelAndButtonPanel.add(conversationsLabel);
                     labelAndButtonPanel.add(selectButtons[count]);
+                    labelAndButtonPanel.add(conversationsLabel);
                     scrollPanel.add(labelAndButtonPanel);
                 }
                 count++;
@@ -195,7 +196,8 @@ public class ConversationsGUI extends JComponent implements Runnable {
             panel.add(title);
             scrollPanel.add(panel);
         }
-        JScrollPane jsp = new JScrollPane(scrollPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JScrollPane jsp = new JScrollPane(scrollPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel topPanel = new JPanel();
         topPanel.add(panel1);
         topPanel.add(panel2);

@@ -77,7 +77,8 @@ public class MessageGUI extends JComponent implements Runnable {
             messageButton.setOpaque(true);
             messageButton.setBorderPainted(false);
             messageButton.setHorizontalAlignment(SwingConstants.LEFT);
-            JLabel time = new JLabel(message.getTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)));
+            JLabel time = new JLabel(message.getTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT,
+                    FormatStyle.SHORT)));
 
             // if user clicks the their own message
             if (message.getUser().getID() == MessageClient.getUser().getID()) {
