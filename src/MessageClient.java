@@ -1,11 +1,10 @@
-import java.io.*;
-import java.net.*;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.io.*;
+import java.net.Socket;
+
 /**
  * MessageClient
- *
+ * <p>
  * Client for the Messaging app.
  *
  * @author Luka Narisawa,
@@ -30,7 +29,7 @@ public class MessageClient {
             // Log in GUI
             // login with username and password, or select "Create account" or "Edit or delete account"
             boolean loggedIn = false;
-            while(true) {
+            while (true) {
                 while (!loggedIn) {
                     LoginGUI loginGUI = new LoginGUI();
                     SwingUtilities.invokeLater(loginGUI);
@@ -154,7 +153,7 @@ public class MessageClient {
                             Thread.onSpinWait();
                         } // end while
                         if (create.getSendClicked().equals("true")) {
-                            Conversation newConversation = create.createConversation( create.getSelected(),
+                            Conversation newConversation = create.createConversation(create.getSelected(),
                                     create.getMessageTextField().getText(), user);
                             if (newConversation != null) {
                                 newConversation.writeToFile("Conversations.txt");
@@ -173,7 +172,7 @@ public class MessageClient {
                         out.flush();
                         if (editAccountGUI.getAction().equals("username")) {
                             boolean changed = false;
-                            while(!changed) {
+                            while (!changed) {
                                 String username = JOptionPane.showInputDialog(null, "Enter username",
                                         "Create account", JOptionPane.QUESTION_MESSAGE);
                                 if (username == null) {
@@ -286,7 +285,7 @@ public class MessageClient {
                             }
                             if (messageGUI.getAction().equals("export")) {
                                 String newFilename = JOptionPane.showInputDialog(null,
-                                        "Enter filename for exporting conversation (Example.csv)","Export Conversation",
+                                        "Enter filename for exporting conversation (Example.csv)", "Export Conversation",
                                         JOptionPane.QUESTION_MESSAGE);
                                 if (newFilename != null) {
                                     conversationsGUI.getSelected().exportToFile(newFilename);
@@ -298,8 +297,7 @@ public class MessageClient {
                     }
                 }
             } // end while
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
