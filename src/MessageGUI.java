@@ -1,26 +1,25 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-
 /**
  * MessageGUI
- *
+ * <p>
  * Represents the gui that gives user messaging choices
  *
  * @author Luka Narisawa
  * @version May 3, 2021
  */
-
 public class MessageGUI extends JComponent implements Runnable {
-    private Conversation conversation;
+    private final Conversation conversation;
     private String action;
-
+    WindowListener windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent evt) {
+            action = "closed";
+        }
+    };
     // Fields
     private JFrame messagesFrame;
     private JPanel messagesScrollPanel;
@@ -28,15 +27,6 @@ public class MessageGUI extends JComponent implements Runnable {
     private JButton exportConversationButton;
     private JButton sendButton;
     private JTextField messageText;
-
-    public MessageGUI(Conversation conversation) {
-        this.conversation = conversation;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
     // actionListener
     ActionListener actionListener = new ActionListener() {
         @Override
@@ -59,22 +49,19 @@ public class MessageGUI extends JComponent implements Runnable {
                 messagesFrame.setVisible(false);
             } else if (e.getSource() == exportConversationButton) {
                 // export conversation process
-
-
-
-
                 action = "export";
                 messagesFrame.setVisible(false);
             }
         }
     };
 
-    WindowListener windowListener = new WindowAdapter() {
-        @Override
-        public void windowClosing(WindowEvent evt) {
-            action = "closed";
-        }
-    };
+    public MessageGUI(Conversation conversation) {
+        this.conversation = conversation;
+    }
+
+    public String getAction() {
+        return action;
+    }
 
     public void run() {
         // Create new frame for messages
@@ -106,87 +93,87 @@ public class MessageGUI extends JComponent implements Runnable {
                 messageButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                    int x = e.getX();
-                    int y = e.getY();
-                    JPopupMenu popupmenu = new JPopupMenu("Message");
+                        int x = e.getX();
+                        int y = e.getY();
+                        JPopupMenu popupmenu = new JPopupMenu("Message");
 
-                    JMenuItem edit = new JMenuItem("Edit");
-                    JMenuItem delete = new JMenuItem("Delete");
-                    popupmenu.add(edit);
-                    popupmenu.add(delete);
+                        JMenuItem edit = new JMenuItem("Edit");
+                        JMenuItem delete = new JMenuItem("Delete");
+                        popupmenu.add(edit);
+                        popupmenu.add(delete);
 
-                    // add the popup to the frame
-                    popupmenu.show(messageButton, x, y);
-                    edit.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            JFrame editMessagesFrame = new JFrame();
-                            Container messageContent = editMessagesFrame.getContentPane();
-                            messageContent.setLayout(new BorderLayout());
-                            editMessagesFrame.setSize(300, 100);
-                            editMessagesFrame.setLocationRelativeTo(null);
-                            editMessagesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                            JPanel editPanel = new JPanel();
-                            // text field for each message so they can edit
-                            JTextField messageTextField = new JTextField(10);
-                            messageTextField.setText(message.getMessage());
-                            JButton editButton = new JButton("Submit Edit");
-                            editPanel.add(messageTextField);
-                            editPanel.add(editButton);
-                            // if user clicks the button then the associated message is updated
-                            editButton.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    // update message in that conversation messages
-                                    message.setMessage(messageTextField.getText());
-                                    conversation.writeToFile(conversation.getFilename());
-                                    action = "edit";
-                                    editMessagesFrame.setVisible(false);
-                                    messagesFrame.setVisible(false);
-                                }
-                            });
-                            editMessagesFrame.add(editPanel);
-                            editMessagesFrame.setVisible(true);
-                        }
-                    });
-                    delete.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            JFrame deleteMessagesFrame = new JFrame();
-                            Container messageContent = deleteMessagesFrame.getContentPane();
-                            messageContent.setLayout(new BorderLayout());
-                            deleteMessagesFrame.setSize(300, 100);
-                            deleteMessagesFrame.setLocationRelativeTo(null);
-                            deleteMessagesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                            JPanel deletePanel = new JPanel();
-                            // text field for each message so they can edit
-                            JButton yesButton = new JButton("Yes");
-                            JButton noButton = new JButton("NO");
-                            deletePanel.add(yesButton);
-                            deletePanel.add(noButton);
-                            // if user clicks the button then the associated message is updated
-                            yesButton.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    conversation.deleteMessage(message);
-                                    conversation.writeToFile(conversation.getFilename());
-                                    action = "deleteMessage";
-                                    deleteMessagesFrame.setVisible(false);
-                                    messagesFrame.setVisible(false);
-                                }
-                            });
-                            noButton.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    deleteMessagesFrame.setVisible(false);
-                                }
-                            });
-                            JPanel panel = new JPanel();
-                            JLabel confirmation = new JLabel("Delete this message?");
-                            panel.add(confirmation);
-                            panel.add(deletePanel);
-                            deleteMessagesFrame.add(panel);
-                            deleteMessagesFrame.setVisible(true);
-                        }
-                    });
+                        // add the popup to the frame
+                        popupmenu.show(messageButton, x, y);
+                        edit.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                JFrame editMessagesFrame = new JFrame();
+                                Container messageContent = editMessagesFrame.getContentPane();
+                                messageContent.setLayout(new BorderLayout());
+                                editMessagesFrame.setSize(300, 100);
+                                editMessagesFrame.setLocationRelativeTo(null);
+                                editMessagesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                JPanel editPanel = new JPanel();
+                                // text field for each message so they can edit
+                                JTextField messageTextField = new JTextField(10);
+                                messageTextField.setText(message.getMessage());
+                                JButton editButton = new JButton("Submit Edit");
+                                editPanel.add(messageTextField);
+                                editPanel.add(editButton);
+                                // if user clicks the button then the associated message is updated
+                                editButton.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        // update message in that conversation messages
+                                        message.setMessage(messageTextField.getText());
+                                        conversation.writeToFile(conversation.getFilename());
+                                        action = "edit";
+                                        editMessagesFrame.setVisible(false);
+                                        messagesFrame.setVisible(false);
+                                    }
+                                });
+                                editMessagesFrame.add(editPanel);
+                                editMessagesFrame.setVisible(true);
+                            }
+                        });
+                        delete.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                JFrame deleteMessagesFrame = new JFrame();
+                                Container messageContent = deleteMessagesFrame.getContentPane();
+                                messageContent.setLayout(new BorderLayout());
+                                deleteMessagesFrame.setSize(300, 100);
+                                deleteMessagesFrame.setLocationRelativeTo(null);
+                                deleteMessagesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                                JPanel deletePanel = new JPanel();
+                                // text field for each message so they can edit
+                                JButton yesButton = new JButton("Yes");
+                                JButton noButton = new JButton("NO");
+                                deletePanel.add(yesButton);
+                                deletePanel.add(noButton);
+                                // if user clicks the button then the associated message is updated
+                                yesButton.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        conversation.deleteMessage(message);
+                                        conversation.writeToFile(conversation.getFilename());
+                                        action = "deleteMessage";
+                                        deleteMessagesFrame.setVisible(false);
+                                        messagesFrame.setVisible(false);
+                                    }
+                                });
+                                noButton.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        deleteMessagesFrame.setVisible(false);
+                                    }
+                                });
+                                JPanel panel = new JPanel();
+                                JLabel confirmation = new JLabel("Delete this message?");
+                                panel.add(confirmation);
+                                panel.add(deletePanel);
+                                deleteMessagesFrame.add(panel);
+                                deleteMessagesFrame.setVisible(true);
+                            }
+                        });
                     }
                 });
             }

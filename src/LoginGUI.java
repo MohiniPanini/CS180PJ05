@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 /**
  * LoginGUI
- *
+ * <p>
  * Represents the login GUI
  *
  * @author Luka Narisawa
@@ -13,15 +13,37 @@ import java.awt.event.*;
 
 public class LoginGUI extends JComponent implements Runnable {
     public static String username;
-    private static String password;
-    private static String action;
-
     // login GUI fields
     static JFrame loginFrame;
     static JTextField usernameField;
     static JTextField passwordField;
     static JButton loginButton;
     static JButton createAccountButton;
+    private static String password;
+    private static String action;
+    ActionListener actionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // login GUI
+            if (e.getSource() == loginButton) {
+                username = usernameField.getText();
+                password = passwordField.getText();
+                action = "login";
+                loginFrame.dispose();
+            }
+            if (e.getSource() == createAccountButton) {
+                action = "create";
+                loginFrame.dispose();
+            }
+            //
+        }
+    };
+    WindowListener windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent evt) {
+            action = "closed";
+        }
+    };
 
     public LoginGUI() {
         action = null;
@@ -40,31 +62,6 @@ public class LoginGUI extends JComponent implements Runnable {
     public String getPassword() {
         return password;
     }
-
-    ActionListener actionListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // login GUI
-            if (e.getSource() == loginButton) {
-                username = usernameField.getText();
-                password = passwordField.getText();
-                action = "login";
-                loginFrame.dispose();
-            }
-            if (e.getSource() == createAccountButton) {
-                action = "create";
-                loginFrame.dispose();
-            }
-            //
-        }
-    };
-
-    WindowListener windowListener = new WindowAdapter() {
-        @Override
-        public void windowClosing(WindowEvent evt) {
-            action = "closed";
-        }
-    };
 
     public void run() {
         loginFrame = new JFrame("Message Login");

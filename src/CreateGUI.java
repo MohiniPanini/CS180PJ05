@@ -2,11 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * src.createGUI
- *
+ * <p>
  * Represents the gui that allows the user to create new messages
  *
  * @author McKenna O'Hara, Luka Narisawa
@@ -15,13 +18,28 @@ import java.util.*;
 
 public class CreateGUI extends JComponent implements Runnable {
 
+    private static JButton sendButton;
     // Fields
     private JFrame createFrame;
     private JList<String> sendToUsers;
     private JTextField messageTextField;
-    private static JButton sendButton;
-
     private String sendClicked;
+    // ActionListener
+    ActionListener actionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == sendButton) {
+                sendClicked = "true";
+                createFrame.setVisible(false);
+            }
+        }
+    };
+    WindowListener windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent evt) {
+            sendClicked = "false";
+        }
+    };
     private String[] usernames;
     private StringBuilder selected;
 
@@ -36,24 +54,6 @@ public class CreateGUI extends JComponent implements Runnable {
     public String getSelected() {
         return String.valueOf(selected);
     }
-
-    // ActionListener
-    ActionListener actionListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == sendButton) {
-                sendClicked = "true";
-                createFrame.setVisible(false);
-            }
-        }
-    };
-
-    WindowListener windowListener = new WindowAdapter() {
-        @Override
-        public void windowClosing(WindowEvent evt) {
-            sendClicked = "false";
-        }
-    };
 
     public void run() {
 
@@ -72,7 +72,7 @@ public class CreateGUI extends JComponent implements Runnable {
         messageTextField = new JTextField(10);
         usernames = new String[User.users.size() - 1];
         int i = 0;
-        for (User user: User.users) {
+        for (User user : User.users) {
             if (user.getID() != MessageClient.getUser().getID()) {
                 usernames[i] = user.getUsername();
                 i++;
@@ -89,10 +89,10 @@ public class CreateGUI extends JComponent implements Runnable {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int [] indices = selectUsers.getSelectedIndices();
+                int[] indices = selectUsers.getSelectedIndices();
                 ArrayList<String> selectedList = new ArrayList<String>();
                 selected = new StringBuilder();
-                for (int i: indices) {
+                for (int i : indices) {
                     selectedList.add(usernames[i]);
                     selected.append(usernames[i] + ",");
                 }
@@ -159,7 +159,7 @@ public class CreateGUI extends JComponent implements Runnable {
                 }
             }
 
-        // if there aren't multiple
+            // if there aren't multiple
         } else {
             for (User singleUser : User.users) {
                 if (receivers.equals(singleUser.getUsername())) {
