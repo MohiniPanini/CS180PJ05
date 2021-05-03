@@ -10,7 +10,7 @@ import java.util.*;
  * Represents the gui that allows the user to create new messages
  *
  * @author McKenna O'Hara, Luka Narisawa
- * @version April 19, 2021
+ * @version May 3, 2021
  */
 
 public class CreateGUI extends JComponent implements Runnable {

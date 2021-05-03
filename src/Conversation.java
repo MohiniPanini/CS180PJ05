@@ -205,7 +205,6 @@ public class Conversation {
 
 	public String toString() {
 		return messages.toString() + "##SEPARATIONISHERE##!"  + convoUsers.toString();
-
 	}
 
 	public static Conversation fromString(String string) {

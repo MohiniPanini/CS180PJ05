@@ -209,7 +209,7 @@ public class ConversationsGUI extends JComponent implements Runnable {
         // Determine which of the conversations are associated with currently logged in user
         for (Conversation conversation : Conversation.conversations) {
             for (User loggedIN : conversation.getConvoUsers()) {
-                if (loggedIN.getUsername().equals(LoginGUI.username)) {
+                if (loggedIN.getID() == MessageClient.getUser().getID()) {
                     usersConversations.add(conversation);
                 }
             }

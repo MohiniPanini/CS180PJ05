@@ -100,8 +100,7 @@ public class MessageClient {
                                             JOptionPane.showMessageDialog(null,
                                                     "Do not use space ( ), comma (,), or vertical bar (|)", "Create account",
                                                     JOptionPane.ERROR_MESSAGE);
-                                        }
-                                        if (invalid.equals("invalid")) {
+                                        } else if (invalid.equals("invalid")) {
                                             JOptionPane.showMessageDialog(null,
                                                     "Password has to be at least 8 characters including " +
                                                             "Lowercase, Uppercase, and number", "Create account",
@@ -138,6 +137,7 @@ public class MessageClient {
                 while (true) {
                     // Display gui to give user conversations list
                     ConversationsGUI conversationsGUI = new ConversationsGUI();
+                    System.out.println(user);
                     User.getAllUsersFromFile();
                     conversationsGUI.usersConversations = conversationsGUI.usersConversations();
                     SwingUtilities.invokeLater(conversationsGUI);
@@ -158,6 +158,7 @@ public class MessageClient {
                                     create.getMessageTextField().getText(), user);
                             if (newConversation != null) {
                                 newConversation.writeToFile("Conversations.txt");
+                                System.out.println("created");
                             }
                         }
                     }
@@ -261,7 +262,7 @@ public class MessageClient {
                     } else if (conversationsGUI.getAction().equals("import")) {
                         while (true) {
                             String importFile = JOptionPane.showInputDialog(null,
-                                    "Enter filename to import from (Example.txt)", "Import Conversation",
+                                    "Enter filename to import from (Example.csv)", "Import Conversation",
                                     JOptionPane.QUESTION_MESSAGE);
                             if (importFile == null) {
                                 break;
@@ -272,7 +273,7 @@ public class MessageClient {
                                 break;
                             }
                             JOptionPane.showMessageDialog(null,
-                                    "File not Found (make sure to include .txt)", "Import Conversation",
+                                    "File not Found (make sure to include .csv)", "Import Conversation",
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -286,7 +287,7 @@ public class MessageClient {
                             }
                             if (messageGUI.getAction().equals("export")) {
                                 String newFilename = JOptionPane.showInputDialog(null,
-                                        "Enter filename for exporting conversation (Example.txt)","Export Conversation",
+                                        "Enter filename for exporting conversation (Example.csv)","Export Conversation",
                                         JOptionPane.QUESTION_MESSAGE);
                                 if (newFilename != null) {
                                     conversationsGUI.getSelected().exportToFile(newFilename);

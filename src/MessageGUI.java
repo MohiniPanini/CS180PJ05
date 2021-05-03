@@ -13,8 +13,8 @@ import java.util.ArrayList;
  *
  * Represents the gui that gives user messaging choices
  *
- * @author
- * @version April 19, 2021
+ * @author Luka Narisawa
+ * @version May 3, 2021
  */
 
 public class MessageGUI extends JComponent implements Runnable {
@@ -237,6 +237,4 @@ public class MessageGUI extends JComponent implements Runnable {
         messagesFrame.getRootPane().setDefaultButton(sendButton);
         messagesFrame.setVisible(true);
     } // run
-
 }
-
