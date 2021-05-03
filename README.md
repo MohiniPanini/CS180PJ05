@@ -1,6 +1,7 @@
 # CS180PJ05
 
 How to Compile: You can compile with an IDE.
+How to run: Run MessageServer first then MessageClient.
 
 Submitted Report: McKenna O'Hara
 Submitted Presentation: Luka Narisawa
@@ -10,25 +11,25 @@ Submitted Vocareum workspace: McKenna O'Hara
   
   Functionality: Reporesents a Server for this messaging app, it accepts multiple client at the same time and run on thread.
   
-  Testing: Run Local Test
+  Testing: Network IO is not tested by RunTestLocal
   
-  Relationships:
+  Relationships: Accept MessageClient and communicate.
 
 // MessageClient.java \\
 
   Functionality: Represents a Client for this messaging app. This is where all components of the project come together and a client of the server can run the application.
   
-  Testing: Run Local test
+  Testing: Network IO is not tested by RunTestLocal
   
-  Relationships:
+  Relationships: Connect to MessageServer and communicate
 
 // Conversation.java \\
 
   Functionality: Represents a Conversation object. Each conversation has an array list of message objects that represent the messages of a conversation, an array list of User objects that represent the users in the conversation, and a String that represnts the conversation's filename.
  
-  Testing: Run Local Test
+  Testing: RunLocalTest
   
-  Relationships:
+  Relationships: Contains ArrayList of Message and User
 
 // ConversationGUI.java \\
 
@@ -68,7 +69,7 @@ Submitted Vocareum workspace: McKenna O'Hara
   
   Testing: Run Local Test
   
-  Relationships:
+  Relationships: Contains user who sent a message, contained in Conversation.
   
   // MessageGUI.java \\
   
@@ -82,15 +83,15 @@ Submitted Vocareum workspace: McKenna O'Hara
 
   Functionality: A class that represents a User object. Each User contains a private String username, private String password, private String ID (the generated ID associated with the user) and a public static ArrayList<User> (represnts all users in the application). This class contains getter methods, setter methods for username and password,toString and fromString methods a public static void getAllUsersFromFile() method that reads the "Users.txt" file that contains all users in the application and adds each user to the static ArrayList<User>, a public static void writeAllUsersToFile() that writes each user in the static ArrayList<User> to the "Users.txt" file, and a public static getUserById(int ID) method that returns the user associated with the int ID parameter and throws a UserNotFoundException.
   
-  Testing: Run Local Test
+  Testing: RunLocalTest
   
-  Relationships:
+  Relationships: Contained in Message and Conversation.
 
 // UserNotFoundException.java \\
 
   Functionality: Represents a UserNotFoundException and is thrown when a user is not found.
   
-  Testing: Run Local Test
+  Testing: RunLocalTest
   
   Relationships: Extend class exception.
   
