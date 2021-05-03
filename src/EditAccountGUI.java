@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 /**
  * DeleteAccountGUI
- *
+ * <p>
  * Represents the gui for deleting account
  *
  * @author Luka Narisawa,
@@ -13,17 +13,17 @@ import java.awt.event.*;
 
 public class EditAccountGUI extends JComponent implements Runnable {
     private String action;
-
+    WindowListener windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent evt) {
+            action = "closed";
+        }
+    };
     // JFrame Fields
     private JFrame frame;
     private JButton editUsernameButton;
     private JButton editPasswordButton;
     private JButton deleteButton;
-
-    public String getAction() {
-        return action;
-    }
-
     // actionListener
     ActionListener actionListener = new ActionListener() {
         @Override
@@ -48,12 +48,9 @@ public class EditAccountGUI extends JComponent implements Runnable {
         }
     }; // actionListener
 
-    WindowListener windowListener = new WindowAdapter() {
-        @Override
-        public void windowClosing(WindowEvent evt) {
-            action = "closed";
-        }
-    };
+    public String getAction() {
+        return action;
+    }
 
     public void run() {
         frame = new JFrame("Edit Account"); // JFrame
