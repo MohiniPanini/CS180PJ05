@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -168,7 +168,7 @@ public class CreateGUI extends JComponent implements Runnable {
                 }
             }
         }
-
+        Collections.sort(users, new SortByID());
         String filename = "";
         for (User user : users) {
             filename = filename + user.getID() + "|";
@@ -177,8 +177,37 @@ public class CreateGUI extends JComponent implements Runnable {
         filename = filename.substring(0, filename.length() - 1) + ".txt";
         File f = new File(filename);
         if (f.exists()) {
-            JOptionPane.showMessageDialog(null, "Conversation already exist",
-                    "Create conversation", JOptionPane.ERROR_MESSAGE);
+            try (BufferedReader bfr = new BufferedReader(new FileReader("Hiddenconvos|" + MessageClient.getUser().getID() + ".txt"))) {
+                String line = bfr.readLine();
+                ArrayList<String> lines = new ArrayList<String>();
+
+                boolean exist = false;
+                String existedLine = null;
+                while (line != null) {
+                    if (filename.equals(line)) {
+                        exist = true;
+                    } else {
+                        lines.add(line);
+                    }
+                    line = bfr.readLine();
+                }
+                if (exist) {
+                    JOptionPane.showMessageDialog(null, "Existed Conversation was restored",
+                            "Create conversation", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Conversation already exist",
+                            "Create conversation", JOptionPane.ERROR_MESSAGE);
+                }
+                try (PrintWriter writer = new PrintWriter(new FileOutputStream("Hiddenconvos|" + MessageClient.getUser().getID() + ".txt", false))) {
+                    for (String line1 : lines) {
+                        writer.println(line1);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
         } else {
             // Create message object

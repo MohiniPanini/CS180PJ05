@@ -51,6 +51,26 @@ public class RunLocalTest {
                 System.out.println("Failed");
                 return;
             }
+            ArrayList<String> usersLines = new ArrayList<String>();
+            try (BufferedReader bfr = new BufferedReader(new FileReader("Users.txt"))) {
+                String line = bfr.readLine();
+                while (line != null) {
+                    usersLines.add(line);
+                    line = bfr.readLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ArrayList<String> conversationsLines = new ArrayList<String>();
+            try (BufferedReader bfr = new BufferedReader(new FileReader("Conversations.txt"))) {
+                String line = bfr.readLine();
+                while (line != null) {
+                    conversationsLines.add(line);
+                    line = bfr.readLine();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             try (PrintWriter pw = new PrintWriter(new FileOutputStream("Users.txt", false))) {
                 pw.write(user.toString());
             } catch (IOException e) {
@@ -196,12 +216,16 @@ public class RunLocalTest {
                 return;
             }
             try (PrintWriter pw = new PrintWriter(new FileOutputStream("Users.txt", false))) {
-                pw.println();
+                for (String line : usersLines) {
+                    pw.println(line);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
             try (PrintWriter pw = new PrintWriter(new FileOutputStream("Conversations.txt", false))) {
-                pw.println();
+                for (String line : conversationsLines) {
+                    pw.println(line);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
