@@ -94,18 +94,3 @@ Submitted Vocareum workspace:
   
   Relationships: Is thrown in the getUserById(int ID) method of the User class.
   
-  // Server.java \\
-  
-  Functionality:
-  
-  Testing: 
-  
-  Relationships:
-  
-  // ServerThread.java \\
-  
-  Functinality:
-  
-  Testing:
-  
-  Relationships:
