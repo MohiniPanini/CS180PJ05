@@ -34,7 +34,7 @@ Submitted Vocareum workspace:
 
   Functionality: Represents the GUI the user sees once they log in to the application. The GUI contains a "Create new message button", an "Edit or delete Account" button, and a list of the users conversations. Clicking on "Create new message button" opens CreateGUI, "Edit or delete Account" opens EditAccountGUI, and selecting on specific conversation opens MessageGUI for that conversation.
   
-  Testing:
+  Testing: Able to select the conversation as the user wants.
   
   Relationships: When the "Create new message" button is clicked a CreateGUI appears. When the "Edit or delete Account" button is clicked an EditAccountGUI appears. When Select button is clicked coresponding coversation opens in MessageGUI.
 
@@ -42,7 +42,7 @@ Submitted Vocareum workspace:
 
   Functionality: Represents the GUI that appears after the user clicks the "Create new message" button of the ConversationGUI. Contains list of existing user to choose who you are sending to and add to see users added on right side box, a text field for the message being sent, and a send button. This class also contains a public createConversation() method that takes the both String contents from createGUI and user object of who is creating a conversation as parameters, and returns a Conversation based on the contents.
   
-  Testing:
+  Testing: Create both private and group chat, and send message.
   
   Relationships: Creates the GUI that appears when the user clicks the "Create new message" button from the ConversationGUI.
 
@@ -50,7 +50,7 @@ Submitted Vocareum workspace:
 
   Functionality: Represents the GUI that appears when the user clicks the "Edit or delete Account" on the ConversationsGUI. Contains 3 buttons that give user the ability to change username, change password, or delete account. Change username will ask for new username, and changes if the input was valid. Change password will ask for new password, and changes if the input was valid. delete account asks to make sure the user wants to delete account, then delete account.
   
-  Testing:
+  Testing: Change the username of the current account, change the password of the current account, and delete the current account.
   
   Relationships: Appears when the user clicks the "Edit or delete Account" button from the ConversationsGUI.
   
@@ -58,7 +58,7 @@ Submitted Vocareum workspace:
 
   Functionality: Represents the first GUI the user sees when running the program. The user is prompted to enter username and password if they already have an account or create an account if they do not. When create account is selected, it ask for the username first and if the input is valid, which means it's not empty, does not contain " ", ",", "|", and it's not already exist, then it will ask for the password which must be at least 8 characters including lowercase, uppercase, and number, but not including " ", ",", "|". If valid password was entered, It will create a new account.
   
-  Testing:
+  Testing: Login with the incorrect username and password, login with the correct username and password. Create account with exist username, and test the format of password.
   
   Relationships:
 
@@ -66,7 +66,7 @@ Submitted Vocareum workspace:
 
   Functionality: A class that represnets a Message object. Each Message object contains a private final User (represents the user that send the message), a private String (represents the message itself) and a private final LocalDateTime (represents the time the message was sent). This class contains getter methods, a setter method for String message field, a toString() method, and public static fromString(String string) method that returns Message (reverse of toString()).
   
-  Testing:
+  Testing: 
   
   Relationships:
   
@@ -74,7 +74,7 @@ Submitted Vocareum workspace:
   
   Functionality: 
   
-  Testing: 
+  Testing: delete conversation and export the message out with csv file.
   
   Relationships:
 
@@ -94,3 +94,18 @@ Submitted Vocareum workspace:
   
   Relationships: Is thrown in the getUserById(int ID) method of the User class.
   
+  // Server.java \\
+  
+  Functionality:
+  
+  Testing: 
+  
+  Relationships:
+  
+  // ServerThread.java \\
+  
+  Functinality:
+  
+  Testing:
+  
+  Relationships:
