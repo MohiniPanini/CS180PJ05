@@ -1,12 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * ConversationsGUI
- *
+ * <p>
  * Represents the gui that allows the user to view all conversations
  *
  * @author Luka Narisawa, McKenna O'Hara
@@ -14,26 +16,22 @@ import java.util.ArrayList;
  */
 
 public class ConversationsGUI extends JComponent implements Runnable {
+    // static variable of all currently logged in users conversations
+    public ArrayList<Conversation> usersConversations;
     private Conversation selected;
     // Fields
     private String action;
+    WindowListener windowListener = new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent evt) {
+            action = "closed";
+        }
+    };
     private JFrame conversationsFrame;
     private JButton editAccountButton;
     private JButton logoutButton;
     private JButton createButton;
     private JButton importConversationButton;
-
-    // static variable of all currently logged in users conversations
-    public ArrayList<Conversation> usersConversations;
-
-    public String getAction() {
-        return action;
-    }
-
-    public Conversation getSelected() {
-        return selected;
-    }
-
     ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -54,12 +52,21 @@ public class ConversationsGUI extends JComponent implements Runnable {
         }
     }; // actionListener
 
-    WindowListener windowListener = new WindowAdapter() {
-        @Override
-        public void windowClosing(WindowEvent evt) {
-            action = "closed";
-        }
-    };
+    // conversation that is to be deleted as parameter
+    public static void writeToHiddenConversationFile(Conversation conversation) {
+
+        // Create hidden conversation file // format of Hiddenconvos|id
+        String filename = "Hiddenconvos|" + MessageClient.getUser().getID() + ".txt";
+        conversation.writeToFile(filename);
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public Conversation getSelected() {
+        return selected;
+    }
 
     public void run() {
         // frame, container for when conversations is clicked
@@ -129,8 +136,8 @@ public class ConversationsGUI extends JComponent implements Runnable {
                     if (!deleted) {
                         // Create string of all users usernames with space in between
                         StringBuilder usersString = new StringBuilder();
-                        for (User user: conversation.getConvoUsers()) {
-                            if(MessageClient.getUser().getID() != user.getID()) {
+                        for (User user : conversation.getConvoUsers()) {
+                            if (MessageClient.getUser().getID() != user.getID()) {
                                 usersString.append(user.getUsername()).append(" ");
                             } // end if
                         } // end for
@@ -215,14 +222,6 @@ public class ConversationsGUI extends JComponent implements Runnable {
             }
         }
         return usersConversations;
-    }
-
-    // conversation that is to be deleted as parameter
-    public static void writeToHiddenConversationFile(Conversation conversation) {
-
-        // Create hidden conversation file // format of Hiddenconvos|id
-        String filename = "Hiddenconvos|" + MessageClient.getUser().getID() + ".txt";
-        conversation.writeToFile(filename);
     }
 
 }

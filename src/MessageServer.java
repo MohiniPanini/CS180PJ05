@@ -1,10 +1,12 @@
 import java.io.*;
-import java.net.*;
-import java.util.Random;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Random;
+
 /**
  * MessageServer
- *
+ * <p>
  * Server for the Messaging app.
  *
  * @author Luka Narisawa,
@@ -12,10 +14,6 @@ import java.util.ArrayList;
  */
 public class MessageServer {
     public static ArrayList<MessageThread> messageThreadList = new ArrayList<>();
-
-    public ArrayList<MessageThread> getMessageThreadList() {
-        return messageThreadList;
-    }
 
     // runs multiple threads for clients
     public static void main(String[] args) {
@@ -44,6 +42,10 @@ public class MessageServer {
             } // end if
         }// end try
     } // main
+
+    public ArrayList<MessageThread> getMessageThreadList() {
+        return messageThreadList;
+    }
 
     private static class MessageThread implements Runnable {
         private final Socket clientSocket;
@@ -322,7 +324,7 @@ public class MessageServer {
                                         out.write("invalid char");
                                         out.println();
                                         out.flush();
-                                    }else if (length && digit && Uppercase && Lowercase) {
+                                    } else if (length && digit && Uppercase && Lowercase) {
                                         user.setPassword(password);
                                         User.writeAllUsersToFile();
                                         out.write("valid");
@@ -376,6 +378,7 @@ public class MessageServer {
                 }
             }
         } //end run
+
         public PrintWriter getWriter() {
             return out;
         }

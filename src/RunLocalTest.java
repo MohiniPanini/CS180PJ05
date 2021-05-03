@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *
  * <p>Purdue University -- CS18000 -- Spring 2021</p>
  *
- * @author Purdue CS 
+ * @author Purdue CS
  * @version January 19, 2021
  */
 public class RunLocalTest {
@@ -58,7 +58,7 @@ public class RunLocalTest {
             }
             User.getAllUsersFromFile();
             boolean failed = true;
-            for (User user1: User.users) {
+            for (User user1 : User.users) {
                 if (user.getID() == user1.getID()) {
                     failed = false;
                 }
@@ -143,7 +143,8 @@ public class RunLocalTest {
                 System.out.println("conversation.getConvoUsers() is wrong");
                 System.out.println("Failed");
                 return;
-            } if (!conversation.toString().equals(messages.toString() + "##SEPARATIONISHERE##!" + users.toString())) {
+            }
+            if (!conversation.toString().equals(messages.toString() + "##SEPARATIONISHERE##!" + users.toString())) {
                 System.out.println("conversation.toString() is wrong");
                 System.out.println("Failed");
                 return;
@@ -209,5 +210,5 @@ public class RunLocalTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }    
+    }
 }
